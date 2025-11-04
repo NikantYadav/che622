@@ -1,0 +1,41 @@
+# Step 6: NPT equilibration at 500 K, 100 bar for 1 ns
+
+units real
+atom_style full
+boundary p p p
+
+
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+pair_modify mix sixthpower
+
+read_data step05_final.data
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+timestep 0.5
+
+thermo_style custom step temp press vol density etotal ke pe
+thermo 5000
+thermo_modify flush yes
+
+# ---------- Trajectory output ----------
+dump traj all atom 10000 step06_trajectory.dump
+dump_modify traj sort id
+
+# Write restart files every 200,000 steps (~100 ps)
+restart 50000 step01_restart_*.bin
+
+fix npt6 all npt temp 500.0 500.0 100.0 aniso 98.6923 98.6923 1000.0 pchain 3
+
+run 500000
+
+unfix npt6
+undump traj
+
+write_data step06_final.data

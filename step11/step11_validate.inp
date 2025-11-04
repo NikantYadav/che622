@@ -1,0 +1,48 @@
+# Step 11: NPT transition to validation conditions
+# 313.15K→298.15K, 0bar→1bar, 2ns
+
+units real
+atom_style full
+boundary p p p
+
+# PCFF Force Field
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+pair_modify mix sixthpower
+
+read_data step10_production.data
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+timestep 0.5
+
+thermo_style custom step temp press vol density etotal ke pe
+thermo 5000
+thermo_modify flush yes
+
+# ---------- Trajectory output ----------
+dump traj all atom 10000 step11_trajectory.dump
+dump_modify traj sort id
+
+# Write restart files every 200,000 steps (~100 ps)
+restart 100000 step11_restart_*.bin
+
+fix data_output all ave/time 1000 1 1000 temp press density vol &
+    file step10_TPD_data.dat
+
+# Simultaneous temperature and pressure change
+# 9.869 atm = 1 bar in LAMMPS real units
+fix npt11 all npt temp 313.15 298.15 100.0 aniso 0.0 0.986923 1000.0 pchain 3
+
+run 4000000  # 2 ns
+
+unfix npt11
+unfix data_output
+undump traj
+
+write_data step11_final.data

@@ -1,0 +1,6 @@
+# CH4 molecule template
+1 molecules
+1 atoms
+
+# CH4 coordinates (single site)
+1 1 0.0 0.0 0.0  # atom_id mol_id type x y z

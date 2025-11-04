@@ -1,0 +1,51 @@
+# Step 2: NPT equilibration at 1000 K, 100 bar for 1 ns
+
+units real
+atom_style full
+boundary p p p
+
+# PCFF Force Field Settings
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+
+pair_modify mix sixthpower
+
+# Read from previous step
+read_data step01_final.data
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+
+timestep 0.5
+
+# Thermodynamic output
+thermo_style custom step time temp press vol density pxx pyy pzz 
+thermo 2000
+thermo_modify flush yes
+
+# ---------- Trajectory output ----------
+dump traj all atom 10000 step01_trajectory.dump
+dump_modify traj sort id
+
+# Write restart files every 200,000 steps (~100 ps)
+restart 50000 step01_restart_*.bin
+
+# NPT fix (100 bar = 986.923 atm in LAMMPS real units)
+# Damping: temperature 100 fs, pressure 1000 fs (as per paper)
+fix npt_fix all npt temp 1000.0 1000.0 100.0 aniso 98.6923 98.6923 1000.0
+
+
+# Run for 1 nsc
+run 200000
+
+# Cleanup
+unfix npt_fix
+undump traj
+
+write_data step02_final.data
+

@@ -1,0 +1,70 @@
+# Step 10: NPT production run at 313.15 K, 0 bar for 20 ns
+
+units real
+atom_style full
+boundary p p p
+
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+pair_modify mix sixthpower
+
+read_restart step10_restart_12000000.bin
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+group coal union all
+group carbon type 1 2 3 4 5 6
+
+timestep 0.5
+
+variable density equal density
+variable vol equal vol
+
+thermo_style    custom step time temp press vol density
+thermo          10000  
+thermo_modify   flush yes
+
+# ---------- Trajectory output ----------
+dump traj all atom 10000 step10_trajectory.dump
+dump_modify traj sort id
+
+# Write restart files every 200,000 steps (~100 ps)
+restart 1000000 step10_restart_*.bin
+
+# Comprehensive data collection
+fix data_out all ave/time 2000 1 2000 c_thermo_temp c_thermo_press v_density v_vol &
+    file step10_thermo_data.txt
+
+# Detailed structural analysis
+compute rdf_cc carbon rdf 200 1 1 2 2 3 3 4 4 5 5 6 6 
+fix rdf_out all ave/time 20000 1 20000 c_rdf_cc[*] file step10_rdf_production.txt mode vector
+
+# Mean squared displacement for dynamics
+compute msd_c carbon msd
+fix msd_out all ave/time 5000 1 5000 c_msd_c[4] file step10_msd_data.txt
+
+# Pore structure monitoring
+compute density_profile all chunk/atom bin/1d z center 1.0 units box
+fix density_out all ave/chunk 10000 1 10000 density_profile density/mass file step10_density_profile.txt
+
+# NPT at zero pressure (drained conditions as per paper)
+fix npt10 all npt temp 313.15 313.15 100.0 aniso 0.0 0.0 1000.0 pchain 3
+
+# Long production run - 20 ns
+run 8000000
+
+# Clean up
+unfix npt10
+unfix data_out
+unfix rdf_out
+unfix msd_out
+unfix density_out
+undump traj
+
+# Write final production structure
+write_data step10_production.data

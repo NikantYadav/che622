@@ -1,0 +1,93 @@
+LAMMPS (30 Jul 2021)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+units real
+atom_style full
+boundary p p p
+
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+
+pair_modify mix sixthpower
+
+read_data coal_pcff.data
+Reading data file ...
+  orthogonal box = (-30.934510 -43.111204 -29.964171) to (29.115490 32.883796 41.336829)
+  2 by 2 by 2 MPI processor grid
+  reading atoms ...
+  3640 atoms
+  scanning bonds ...
+  4 = max bonds/atom
+  scanning angles ...
+  6 = max angles/atom
+  scanning dihedrals ...
+  21 = max dihedrals/atom
+  scanning impropers ...
+  4 = max impropers/atom
+  reading bonds ...
+  4020 bonds
+  reading angles ...
+  7100 angles
+  reading dihedrals ...
+  11170 dihedrals
+  reading impropers ...
+  3110 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     4 = max # of 1-2 neighbors
+     9 = max # of 1-3 neighbors
+    24 = max # of 1-4 neighbors
+    27 = max # of special neighbors
+  special bonds CPU = 0.001 seconds
+  read_data CPU = 0.024 seconds
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+# Time step
+timestep 0.5  # 0.5 fs
+
+# Thermodynamic output
+thermo_style custom step temp press vol density etotal ke pe
+thermo 5000
+thermo_modify flush yes
+
+# Trajectory output
+dump coords all atom 10000 step01_trajectory.dump
+dump_modify coords sort id
+
+# NVT fix with Nose-Hoover thermostat (3-chain as per paper)
+fix nvt1 all nvt temp 1000.0 1000.0 100.0 tchain 3
+
+# Run for 1 ns (2,000,000 steps at 0.5 fs)
+run 2000000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:340)
+  G vector (1/distance) = 0.12323105
+  grid = 8 9 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.035548844
+  estimated relative force accuracy = 0.00010705429
+  using double precision FFTW3
+  3d grid and FFT values/proc = 900 144
+Neighbor list info ...
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7, bins = 9 11 11
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/class2/coul/long, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.17 | 19.37 | 20.61 Mbytes
+Step Temp Press Volume Density TotEng KinEng PotEng 
+       0            0    272.81876     325382.1   0.14598018    19773.049            0    19773.049 
+    5000    1009.9949    131.74483     325382.1   0.14598018    38808.874    10955.585    27853.289 

@@ -1,0 +1,18 @@
+# CO2 molecule template  
+1 molecules
+3 atoms
+
+# CO2 coordinates (linear molecule)  
+1 1 2 0.0 0.0 0.0    # C atom at center (type 2)
+2 1 3 1.16 0.0 0.0   # O atom (type 3)
+3 1 3 -1.16 0.0 0.0  # O atom (type 3)
+
+# Bonds
+1 bonds
+1 1 1 2  # bond between C and first O
+2 1 1 3  # bond between C and second O
+
+# Angles  
+1 angles
+1 1 2 1 3  # angle_id angle_type atom1 atom2 atom3 (O-C-O)
+

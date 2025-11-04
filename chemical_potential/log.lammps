@@ -1,0 +1,105 @@
+LAMMPS (30 Jul 2021)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+# bulk CH4 GCMC
+
+units           real
+atom_style      full
+boundary        p p p
+
+# --- System Definition ---
+region          simbox block 0.0 50.0 0.0 50.0 0.0 50.0 units box
+create_box      3 simbox bond/types 1 angle/types 1 # Create a box for one atom type (CH4)
+Created orthogonal box = (0.0000000 0.0000000 0.0000000) to (50.000000 50.000000 50.000000)
+  2 by 2 by 2 MPI processor grid
+
+# --- Force Field ---
+pair_style      lj/cut 14.0
+bond_style      harmonic
+angle_style     harmonic
+include         trappe_params.dat
+# Atom type definitions:
+# Type 1 = CH4   (methane united atom)
+# Type 2 = C_CO2 (carbon in CO2)
+# Type 3 = O_CO2 (oxygen in CO2)
+
+# Pure component interactions
+pair_coeff 1 1 0.294106 3.73   # CH4-CH4
+pair_coeff 2 2 0.053655 2.80   # C_CO2-C_CO2
+pair_coeff 3 3 0.156989 3.05   # O_CO2-O_CO2
+
+# =================================================
+# BOND PARAMETERS (CO2 only)
+# =================================================
+# Format: bond_coeff bond_type K(kcal/mol/Angstrom^2) r0(Angstrom)
+bond_coeff 1 1000.0 1.16  # C_CO2-O_CO2 bond
+
+# =================================================
+# ANGLE PARAMETERS (CO2 only)
+# =================================================
+# Format: angle_coeff angle_type K(kcal/mol/rad^2) theta0(degrees)
+angle_coeff 1 1000.0 180.0  # O_CO2-C_CO2-O_CO2 angle
+
+# --- Molecule Definition ---
+molecule        ch4_mol molecule_ch4.dat
+Read molecule template ch4_mol:
+  1 molecules
+  1 atoms with max type 1
+  0 bonds with max type 0
+  0 angles with max type 0
+  0 dihedrals with max type 0
+  0 impropers with max type 0
+mass            1 16.04 # Mass of TraPPE CH4
+mass            2 12.01    # C in CO2
+mass            3 15.999   # O in CO2
+
+# --- GCMC Settings ---
+variable        mu equal -7.00 # <-- SET CHEMICAL POTENTIAL HERE (kcal/mol)
+variable        temp equal 313.15
+
+variable natoms equal atoms
+variable density equal density
+variable vol equal vol
+
+#       fix ID  group  gcmc  N  X  M type seed Temp   mu    disp  keyword ...
+fix             gcmc_run all gcmc 100 5000 5000 0 54321 ${temp} ${mu} 0.5 mol ch4_mol
+fix             gcmc_run all gcmc 100 5000 5000 0 54321 313.15 ${mu} 0.5 mol ch4_mol
+fix             gcmc_run all gcmc 100 5000 5000 0 54321 313.15 -7 0.5 mol ch4_mol
+
+fix data_output all ave/time 500 1 500 c_thermo_temp c_thermo_press v_natoms c_thermo_pe v_density v_vol     file ch4_gcmc_data.dat
+
+# --- Simulation Run ---
+timestep        1.0
+thermo_style    custom step temp press density vol atoms
+thermo          1000
+
+# Optional: Dump trajectory for visualization
+# dump          1 all atom 1000 ch4_gcmc.lammpstrj
+
+# Run for equilibration and then production
+run             50000 # 50 ps equilibration
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_run
+WARNING: Fix gcmc is being applied to the default group all (src/MC/fix_gcmc.cpp:663)
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 16
+  ghost atom cutoff = 16
+  binsize = 8, bins = 7 7 7
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 0.4344 | 0.4344 | 0.4344 Mbytes
+Step Temp Press Density Volume Atoms 
+       0            0            0            0       125000        0 
+    1000            0   -5.7461417  0.024717321       125000      116 
+    2000            0   -0.1477522  0.021734196       125000      102 
+    3000            0    5.9342485  0.025143482       125000      118 
+    4000            0   -5.7909449  0.026848125       125000      126 
+    5000            0  -0.52295548  0.024930401       125000      117 
+    6000            0    1.6426953  0.031535892       125000      148 
+    7000            0    1.9725146  0.028978928       125000      136 
+    8000            0    6.371

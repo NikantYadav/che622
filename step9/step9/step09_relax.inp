@@ -1,0 +1,47 @@
+# Step 9: NPT pressure reduction from 100 bar to 0 bar at 313.15K for 2 ns
+
+units real
+atom_style full
+boundary p p p
+
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+pair_modify mix sixthpower
+
+read_data step08_final.data
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+timestep 0.5
+
+variable density equal density
+variable vol equal vol
+
+fix data_output all ave/time 1000 1 1000 c_thermo_temp c_thermo_press v_density v_vol &
+    file step09_TPD_data.dat
+
+thermo_style custom step temp press vol density etotal ke pe
+thermo 2000
+thermo_modify flush yes
+
+# ---------- Trajectory output ----------
+dump traj all atom 10000 step09_trajectory.dump
+dump_modify traj sort id
+
+# Write restart files every 200,000 steps (~100 ps)
+restart 50000 step09_restart_*.bin
+
+fix npt9 all npt temp 313.15 313.15 100.0 aniso 98.6923 0.0 1000.0 pchain 3
+
+run 1000000  # 0.5 ns
+
+unfix npt9
+unfix data_output
+undump traj
+
+write_data step09_final.data

@@ -1,0 +1,63 @@
+units real
+atom_style full
+boundary p p p
+atom_style full
+
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+
+pair_modify mix sixthpower
+
+read_data coal_pcff.data
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+group coal all
+
+# Computes for detailed analysis
+compute temp_coal coal temp
+compute temp_carbon carbon temp
+compute pe_coal coal pe
+compute ke_coal coal ke
+compute press_coal all pressure thermo_temp
+compute vol_coal all vol
+compute density_coal all density/atom
+
+# Time step
+timestep 0.5  # 0.5 fs
+
+# Thermodynamic output
+thermo_style custom step temp press vol density etotal ke pe c_temp_coal
+thermo 5000
+thermo_modify flush yes
+
+# Trajectory output
+dump coords all atom 10000 step01_trajectory.dump
+dump_modify coords sort id
+
+# Data collection for plotting
+fix data_out all ave/time 1000 1 1000 c_temp_coal c_press_coal vol density etotal &
+    file step01_thermo_data.txt
+
+# NVT fix with Nose-Hoover thermostat (3-chain as per paper)
+fix nvt1 all nvt temp 1000.0 1000.0 100.0 tchain 3
+
+# Run for 1 ns (2,000,000 steps at 0.5 fs)
+run 2000000
+
+# Clean up
+unfix nvt1
+unfix data_out
+undump coords
+
+# Write final configuration
+write_data step01_final.data
+
+print "Step 1 (NVT 1000K) completed successfully!"
+print "Final temperature: $(temp)"
+print "Final density: $(density)"

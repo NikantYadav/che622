@@ -1,0 +1,67 @@
+# Step 12: NPT validation run at 298.15 K, 1 bar for 20 ns
+# This generates structure for comparison with experimental data
+
+units real
+atom_style full
+boundary p p p
+
+# PCFF Force Field
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+pair_modify mix sixthpower
+
+read_data step11_final.data
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+group coal all
+group carbon type 1 2 3 4 5 6
+
+timestep 0.5
+
+# Validation run thermodynamics
+thermo_style    custom step time temp press vol density
+thermo          10000  
+thermo_modify   flush yes
+
+# ---------- Trajectory output ----------
+dump traj all atom 10000 step10_trajectory.dump
+dump_modify traj sort id
+
+# Write restart files every 200,000 steps (~100 ps)
+restart 2000000 step10_restart_*.bin
+
+# Comprehensive data collection for validation
+fix data_out all ave/time 2000 1 2000 temp press vol density etotal ke pe &
+    file step12_thermo_data.txt
+
+# Structural analysis for validation
+compute rdf_cc carbon rdf 200 1 1 2 2 3 3 4 4 5 5 6 6
+fix rdf_out all ave/time 20000 1 20000 c_rdf_cc[*] file step12_rdf_validation.txt mode vector
+
+# Mechanical properties (bulk modulus estimation)
+compute stress_tensor all stress/atom NULL
+fix stress_out all ave/time 5000 1 5000 c_stress_tensor[1] c_stress_tensor[2] c_stress_tensor[3] &
+    file step12_stress_validation.txt
+
+# NPT at standard conditions (298.15 K, 1 bar)
+fix npt12 all npt temp 298.15 298.15 100.0 aniso 0.986923 0.986923 1000.0 pchain 3
+
+# Long validation run - 20 ns
+run 40000000
+
+# Clean up
+unfix npt12
+unfix data_out
+unfix rdf_out
+unfix stress_out
+undump traj
+
+# Write final validation structure
+write_data step12_validation.data
+write_restart   restart.step_12_VALIDATION_FINAL

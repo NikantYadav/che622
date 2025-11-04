@@ -1,0 +1,833 @@
+
+
+Running all2lmp: v1.22 / 14 April 2025
+Using Python version: 3.10.11 (main, Dec 29 2024, 06:17:50) [GCC 14.2.1 20240910]
+Using Python executable: /home/nikant/.pyenv/versions/3.10.11/bin/python
+Trying Atom Equivalences if needed
+Trying Atom Auto-Equivalences if needed
+Trying to find atom charge based on bond-incs
+Resetting molecule-ids based on cluster analysis
+
+
+Using higher version of parameters for #equivalences N a version: 2.10 
+Using higher version of parameters for #bond_increments c_1 cp version: 2.10 
+Using higher version of parameters for #bond_increments cp si version: 2.20 
+Using higher version of parameters for #bond_increments si si version: 2.20 
+Using higher version of parameters for #bond_increments c si version: 2.20 
+Using higher version of parameters for #bond_increments h si version: 2.20 
+Using higher version of parameters for #quartic_bonds cp h version: 2.10 
+Using higher version of parameters for #quartic_bonds c_1 o_1 version: 2.10 
+Using higher version of parameters for #quartic_bonds cp cp version: 2.10 
+Using higher version of parameters for #quartic_bonds c o_2 version: 2.20 
+Using higher version of parameters for #quartic_bonds c c version: 2.10 
+Using higher version of parameters for #quartic_bonds c h version: 2.10 
+Using higher version of parameters for #quartic_bonds c= c=1 version: 3.10 
+Using higher version of parameters for #torsion_3 h c cp cp version: 2.00 
+Using higher version of parameters for #torsion_3 c c c c version: 2.10 
+Using higher version of parameters for #torsion_3 h c c h version: 2.10 
+Using higher version of parameters for #torsion_3 c c c h version: 2.10 
+Using higher version of parameters for #wilson_out_of_plane c cp cp cp version: 2.00 
+Using higher version of parameters for #wilson_out_of_plane cp cp cp h version: 3.10 
+Using higher version of parameters for #pair_coeffs_9_6 n z version: 2.10 
+Using higher version of parameters for #pair_coeffs_9_6 s ' version: 2.10 
+Using higher version of parameters for #pair_coeffs_9_6 c = version: 2.10 
+Using higher version of parameters for #pair_coeffs_9_6 s i version: 2.20 
+Using higher version of parameters for #pair_coeffs_9_6 h o 2 version: 2.10 
+Using higher version of parameters for #pair_coeffs_9_6 o _ 1 version: 2.10 
+Using higher version of parameters for #pair_coeffs_9_6 n = version: 3.10 
+Using higher version of parameters for #bondbond13 cp cp cp cp version: 2.10 
+Using higher version of parameters for #middlebondtorsion o_1 c_1 o_2 c version: 2.10 
+
+Read in frc_files/pcff.frc forcefeild file
+Read in /home/nikant/Desktop/che622/Project/try3/lunar/typed_pcff_packmol.pdb pdb file
+Read in /home/nikant/Desktop/che622/Project/try3/lunar/typed_pcff.nta new-type-assignment file
+
+
+
+Getting force field parameters for the read in system
+
+Checking for atom-type assignment consistency with atom-types in .frc file
+
+
+Finding molecules to reset molids....
+-----------------Cluster Analysis-----------------
+  molID    Size of Fragment     %Size of Fragment    
+--------------------------------------------------
+    1             364                10.00          
+    2             364                10.00          
+    3             364                10.00          
+    4             364                10.00          
+    5             364                10.00          
+    6             364                10.00          
+    7             364                10.00          
+    8             364                10.00          
+    9             364                10.00          
+    10            364                10.00          
+
+
+WARNING No Bond Increment for atom 18 and atom 220, bond pair oh ho2 
+WARNING No Bond Increment for atom 37 and atom 232, bond pair oh ho2 
+WARNING No Bond Increment for atom 38 and atom 233, bond pair oh ho2 
+WARNING No Bond Increment for atom 46 and atom 238, bond pair oh ho2 
+WARNING No Bond Increment for atom 72 and atom 256, bond pair oh ho2 
+WARNING No Bond Increment for atom 89 and atom 264, bond pair oh ho2 
+WARNING No Bond Increment for atom 91 and atom 268, bond pair oh ho2 
+WARNING No Bond Increment for atom 113 and atom 276, bond pair oh ho2 
+WARNING No Bond Increment for atom 127 and atom 285, bond pair oh ho2 
+WARNING No Bond Increment for atom 128 and atom 286, bond pair oh ho2 
+WARNING No Bond Increment for atom 203 and atom 356, bond pair oh ho2 
+WARNING No Bond Increment for atom 204 and atom 357, bond pair oh ho2 
+WARNING No Bond Increment for atom 220 and atom 18, bond pair ho2 oh 
+WARNING No Bond Increment for atom 232 and atom 37, bond pair ho2 oh 
+WARNING No Bond Increment for atom 233 and atom 38, bond pair ho2 oh 
+WARNING No Bond Increment for atom 238 and atom 46, bond pair ho2 oh 
+WARNING No Bond Increment for atom 256 and atom 72, bond pair ho2 oh 
+WARNING No Bond Increment for atom 264 and atom 89, bond pair ho2 oh 
+WARNING No Bond Increment for atom 268 and atom 91, bond pair ho2 oh 
+WARNING No Bond Increment for atom 276 and atom 113, bond pair ho2 oh 
+WARNING No Bond Increment for atom 285 and atom 127, bond pair ho2 oh 
+WARNING No Bond Increment for atom 286 and atom 128, bond pair ho2 oh 
+WARNING No Bond Increment for atom 356 and atom 203, bond pair ho2 oh 
+WARNING No Bond Increment for atom 357 and atom 204, bond pair ho2 oh 
+WARNING No Bond Increment for atom 382 and atom 584, bond pair oh ho2 
+WARNING No Bond Increment for atom 401 and atom 596, bond pair oh ho2 
+WARNING No Bond Increment for atom 402 and atom 597, bond pair oh ho2 
+WARNING No Bond Increment for atom 410 and atom 602, bond pair oh ho2 
+WARNING No Bond Increment for atom 436 and atom 620, bond pair oh ho2 
+WARNING No Bond Increment for atom 453 and atom 628, bond pair oh ho2 
+WARNING No Bond Increment for atom 455 and atom 632, bond pair oh ho2 
+WARNING No Bond Increment for atom 477 and atom 640, bond pair oh ho2 
+WARNING No Bond Increment for atom 491 and atom 649, bond pair oh ho2 
+WARNING No Bond Increment for atom 492 and atom 650, bond pair oh ho2 
+WARNING No Bond Increment for atom 567 and atom 720, bond pair oh ho2 
+WARNING No Bond Increment for atom 568 and atom 721, bond pair oh ho2 
+WARNING No Bond Increment for atom 584 and atom 382, bond pair ho2 oh 
+WARNING No Bond Increment for atom 596 and atom 401, bond pair ho2 oh 
+WARNING No Bond Increment for atom 597 and atom 402, bond pair ho2 oh 
+WARNING No Bond Increment for atom 602 and atom 410, bond pair ho2 oh 
+WARNING No Bond Increment for atom 620 and atom 436, bond pair ho2 oh 
+WARNING No Bond Increment for atom 628 and atom 453, bond pair ho2 oh 
+WARNING No Bond Increment for atom 632 and atom 455, bond pair ho2 oh 
+WARNING No Bond Increment for atom 640 and atom 477, bond pair ho2 oh 
+WARNING No Bond Increment for atom 649 and atom 491, bond pair ho2 oh 
+WARNING No Bond Increment for atom 650 and atom 492, bond pair ho2 oh 
+WARNING No Bond Increment for atom 720 and atom 567, bond pair ho2 oh 
+WARNING No Bond Increment for atom 721 and atom 568, bond pair ho2 oh 
+WARNING No Bond Increment for atom 746 and atom 948, bond pair oh ho2 
+WARNING No Bond Increment for atom 765 and atom 960, bond pair oh ho2 
+WARNING No Bond Increment for atom 766 and atom 961, bond pair oh ho2 
+WARNING No Bond Increment for atom 774 and atom 966, bond pair oh ho2 
+WARNING No Bond Increment for atom 800 and atom 984, bond pair oh ho2 
+WARNING No Bond Increment for atom 817 and atom 992, bond pair oh ho2 
+WARNING No Bond Increment for atom 819 and atom 996, bond pair oh ho2 
+WARNING No Bond Increment for atom 841 and atom 1004, bond pair oh ho2 
+WARNING No Bond Increment for atom 855 and atom 1013, bond pair oh ho2 
+WARNING No Bond Increment for atom 856 and atom 1014, bond pair oh ho2 
+WARNING No Bond Increment for atom 931 and atom 1084, bond pair oh ho2 
+WARNING No Bond Increment for atom 932 and atom 1085, bond pair oh ho2 
+WARNING No Bond Increment for atom 948 and atom 746, bond pair ho2 oh 
+WARNING No Bond Increment for atom 960 and atom 765, bond pair ho2 oh 
+WARNING No Bond Increment for atom 961 and atom 766, bond pair ho2 oh 
+WARNING No Bond Increment for atom 966 and atom 774, bond pair ho2 oh 
+WARNING No Bond Increment for atom 984 and atom 800, bond pair ho2 oh 
+WARNING No Bond Increment for atom 992 and atom 817, bond pair ho2 oh 
+WARNING No Bond Increment for atom 996 and atom 819, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1004 and atom 841, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1013 and atom 855, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1014 and atom 856, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1084 and atom 931, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1085 and atom 932, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1110 and atom 1312, bond pair oh ho2 
+WARNING No Bond Increment for atom 1129 and atom 1324, bond pair oh ho2 
+WARNING No Bond Increment for atom 1130 and atom 1325, bond pair oh ho2 
+WARNING No Bond Increment for atom 1138 and atom 1330, bond pair oh ho2 
+WARNING No Bond Increment for atom 1164 and atom 1348, bond pair oh ho2 
+WARNING No Bond Increment for atom 1181 and atom 1356, bond pair oh ho2 
+WARNING No Bond Increment for atom 1183 and atom 1360, bond pair oh ho2 
+WARNING No Bond Increment for atom 1205 and atom 1368, bond pair oh ho2 
+WARNING No Bond Increment for atom 1219 and atom 1377, bond pair oh ho2 
+WARNING No Bond Increment for atom 1220 and atom 1378, bond pair oh ho2 
+WARNING No Bond Increment for atom 1295 and atom 1448, bond pair oh ho2 
+WARNING No Bond Increment for atom 1296 and atom 1449, bond pair oh ho2 
+WARNING No Bond Increment for atom 1312 and atom 1110, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1324 and atom 1129, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1325 and atom 1130, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1330 and atom 1138, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1348 and atom 1164, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1356 and atom 1181, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1360 and atom 1183, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1368 and atom 1205, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1377 and atom 1219, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1378 and atom 1220, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1448 and atom 1295, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1449 and atom 1296, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1474 and atom 1676, bond pair oh ho2 
+WARNING No Bond Increment for atom 1493 and atom 1688, bond pair oh ho2 
+WARNING No Bond Increment for atom 1494 and atom 1689, bond pair oh ho2 
+WARNING No Bond Increment for atom 1502 and atom 1694, bond pair oh ho2 
+WARNING No Bond Increment for atom 1528 and atom 1712, bond pair oh ho2 
+WARNING No Bond Increment for atom 1545 and atom 1720, bond pair oh ho2 
+WARNING No Bond Increment for atom 1547 and atom 1724, bond pair oh ho2 
+WARNING No Bond Increment for atom 1569 and atom 1732, bond pair oh ho2 
+WARNING No Bond Increment for atom 1583 and atom 1741, bond pair oh ho2 
+WARNING No Bond Increment for atom 1584 and atom 1742, bond pair oh ho2 
+WARNING No Bond Increment for atom 1659 and atom 1812, bond pair oh ho2 
+WARNING No Bond Increment for atom 1660 and atom 1813, bond pair oh ho2 
+WARNING No Bond Increment for atom 1676 and atom 1474, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1688 and atom 1493, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1689 and atom 1494, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1694 and atom 1502, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1712 and atom 1528, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1720 and atom 1545, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1724 and atom 1547, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1732 and atom 1569, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1741 and atom 1583, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1742 and atom 1584, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1812 and atom 1659, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1813 and atom 1660, bond pair ho2 oh 
+WARNING No Bond Increment for atom 1838 and atom 2040, bond pair oh ho2 
+WARNING No Bond Increment for atom 1857 and atom 2052, bond pair oh ho2 
+WARNING No Bond Increment for atom 1858 and atom 2053, bond pair oh ho2 
+WARNING No Bond Increment for atom 1866 and atom 2058, bond pair oh ho2 
+WARNING No Bond Increment for atom 1892 and atom 2076, bond pair oh ho2 
+WARNING No Bond Increment for atom 1909 and atom 2084, bond pair oh ho2 
+WARNING No Bond Increment for atom 1911 and atom 2088, bond pair oh ho2 
+WARNING No Bond Increment for atom 1933 and atom 2096, bond pair oh ho2 
+WARNING No Bond Increment for atom 1947 and atom 2105, bond pair oh ho2 
+WARNING No Bond Increment for atom 1948 and atom 2106, bond pair oh ho2 
+WARNING No Bond Increment for atom 2023 and atom 2176, bond pair oh ho2 
+WARNING No Bond Increment for atom 2024 and atom 2177, bond pair oh ho2 
+WARNING No Bond Increment for atom 2040 and atom 1838, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2052 and atom 1857, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2053 and atom 1858, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2058 and atom 1866, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2076 and atom 1892, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2084 and atom 1909, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2088 and atom 1911, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2096 and atom 1933, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2105 and atom 1947, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2106 and atom 1948, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2176 and atom 2023, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2177 and atom 2024, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2202 and atom 2404, bond pair oh ho2 
+WARNING No Bond Increment for atom 2221 and atom 2416, bond pair oh ho2 
+WARNING No Bond Increment for atom 2222 and atom 2417, bond pair oh ho2 
+WARNING No Bond Increment for atom 2230 and atom 2422, bond pair oh ho2 
+WARNING No Bond Increment for atom 2256 and atom 2440, bond pair oh ho2 
+WARNING No Bond Increment for atom 2273 and atom 2448, bond pair oh ho2 
+WARNING No Bond Increment for atom 2275 and atom 2452, bond pair oh ho2 
+WARNING No Bond Increment for atom 2297 and atom 2460, bond pair oh ho2 
+WARNING No Bond Increment for atom 2311 and atom 2469, bond pair oh ho2 
+WARNING No Bond Increment for atom 2312 and atom 2470, bond pair oh ho2 
+WARNING No Bond Increment for atom 2387 and atom 2540, bond pair oh ho2 
+WARNING No Bond Increment for atom 2388 and atom 2541, bond pair oh ho2 
+WARNING No Bond Increment for atom 2404 and atom 2202, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2416 and atom 2221, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2417 and atom 2222, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2422 and atom 2230, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2440 and atom 2256, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2448 and atom 2273, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2452 and atom 2275, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2460 and atom 2297, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2469 and atom 2311, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2470 and atom 2312, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2540 and atom 2387, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2541 and atom 2388, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2566 and atom 2768, bond pair oh ho2 
+WARNING No Bond Increment for atom 2585 and atom 2780, bond pair oh ho2 
+WARNING No Bond Increment for atom 2586 and atom 2781, bond pair oh ho2 
+WARNING No Bond Increment for atom 2594 and atom 2786, bond pair oh ho2 
+WARNING No Bond Increment for atom 2620 and atom 2804, bond pair oh ho2 
+WARNING No Bond Increment for atom 2637 and atom 2812, bond pair oh ho2 
+WARNING No Bond Increment for atom 2639 and atom 2816, bond pair oh ho2 
+WARNING No Bond Increment for atom 2661 and atom 2824, bond pair oh ho2 
+WARNING No Bond Increment for atom 2675 and atom 2833, bond pair oh ho2 
+WARNING No Bond Increment for atom 2676 and atom 2834, bond pair oh ho2 
+WARNING No Bond Increment for atom 2751 and atom 2904, bond pair oh ho2 
+WARNING No Bond Increment for atom 2752 and atom 2905, bond pair oh ho2 
+WARNING No Bond Increment for atom 2768 and atom 2566, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2780 and atom 2585, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2781 and atom 2586, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2786 and atom 2594, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2804 and atom 2620, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2812 and atom 2637, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2816 and atom 2639, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2824 and atom 2661, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2833 and atom 2675, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2834 and atom 2676, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2904 and atom 2751, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2905 and atom 2752, bond pair ho2 oh 
+WARNING No Bond Increment for atom 2930 and atom 3132, bond pair oh ho2 
+WARNING No Bond Increment for atom 2949 and atom 3144, bond pair oh ho2 
+WARNING No Bond Increment for atom 2950 and atom 3145, bond pair oh ho2 
+WARNING No Bond Increment for atom 2958 and atom 3150, bond pair oh ho2 
+WARNING No Bond Increment for atom 2984 and atom 3168, bond pair oh ho2 
+WARNING No Bond Increment for atom 3001 and atom 3176, bond pair oh ho2 
+WARNING No Bond Increment for atom 3003 and atom 3180, bond pair oh ho2 
+WARNING No Bond Increment for atom 3025 and atom 3188, bond pair oh ho2 
+WARNING No Bond Increment for atom 3039 and atom 3197, bond pair oh ho2 
+WARNING No Bond Increment for atom 3040 and atom 3198, bond pair oh ho2 
+WARNING No Bond Increment for atom 3115 and atom 3268, bond pair oh ho2 
+WARNING No Bond Increment for atom 3116 and atom 3269, bond pair oh ho2 
+WARNING No Bond Increment for atom 3132 and atom 2930, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3144 and atom 2949, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3145 and atom 2950, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3150 and atom 2958, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3168 and atom 2984, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3176 and atom 3001, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3180 and atom 3003, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3188 and atom 3025, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3197 and atom 3039, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3198 and atom 3040, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3268 and atom 3115, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3269 and atom 3116, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3294 and atom 3496, bond pair oh ho2 
+WARNING No Bond Increment for atom 3313 and atom 3508, bond pair oh ho2 
+WARNING No Bond Increment for atom 3314 and atom 3509, bond pair oh ho2 
+WARNING No Bond Increment for atom 3322 and atom 3514, bond pair oh ho2 
+WARNING No Bond Increment for atom 3348 and atom 3532, bond pair oh ho2 
+WARNING No Bond Increment for atom 3365 and atom 3540, bond pair oh ho2 
+WARNING No Bond Increment for atom 3367 and atom 3544, bond pair oh ho2 
+WARNING No Bond Increment for atom 3389 and atom 3552, bond pair oh ho2 
+WARNING No Bond Increment for atom 3403 and atom 3561, bond pair oh ho2 
+WARNING No Bond Increment for atom 3404 and atom 3562, bond pair oh ho2 
+WARNING No Bond Increment for atom 3479 and atom 3632, bond pair oh ho2 
+WARNING No Bond Increment for atom 3480 and atom 3633, bond pair oh ho2 
+WARNING No Bond Increment for atom 3496 and atom 3294, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3508 and atom 3313, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3509 and atom 3314, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3514 and atom 3322, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3532 and atom 3348, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3540 and atom 3365, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3544 and atom 3367, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3552 and atom 3389, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3561 and atom 3403, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3562 and atom 3404, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3632 and atom 3479, bond pair ho2 oh 
+WARNING No Bond Increment for atom 3633 and atom 3480, bond pair ho2 oh 
+
+
+Atoms information has been found
+  /home/nikant/Desktop/che622/Project/try3/lunar/typed_pcff_packmol.pdb has all image flags set to zero
+  There are 3640 atoms in 10 molecules in this file
+  The total charge in the system is 0.0000
+
+
+
+
+
+
+WARNING unable to find bondbond info for Bondbond Coeff 9 c1 cp c2
+WARNING unable to find bondbond info for Bondbond Coeff 11 c1 cp o_1
+WARNING unable to find bondbond info for Bondbond Coeff 12 c1 oh ho2
+WARNING unable to find bondbond info for Bondbond Coeff 21 c2 c5 hc
+WARNING unable to find bondbond info for Bondbond Coeff 23 c2 cp o_1
+WARNING unable to find bondbond info for Bondbond Coeff 24 c2 oc cp
+WARNING unable to find bondbond info for Bondbond Coeff 27 c5 c2 c5
+WARNING unable to find bondbond info for Bondbond Coeff 28 c5 c2 cp
+WARNING unable to find bondbond info for Bondbond Coeff 36 c5 oc cp
+WARNING unable to find bondbond info for Bondbond Coeff 37 c=2 cp cp
+WARNING unable to find bondbond info for Bondbond Coeff 38 c=2 oh ho2
+WARNING unable to find bondbond info for Bondbond Coeff 40 cp c2 cp
+WARNING unable to find bondbond info for Bondbond Coeff 42 cp c2 oc
+WARNING unable to find bondbond info for Bondbond Coeff 45 cp c=2 o=
+WARNING unable to find bondbond info for Bondbond Coeff 46 cp c=2 oh
+WARNING unable to find bondbond info for Bondbond Coeff 54 cp cp sc
+WARNING unable to find bondbond info for Bondbond Coeff 55 cp cp sh
+WARNING unable to find bondbond info for Bondbond Coeff 57 cp nn cp
+WARNING unable to find bondbond info for Bondbond Coeff 60 cp oc cp
+WARNING unable to find bondbond info for Bondbond Coeff 61 cp oh ho2
+WARNING unable to find bondbond info for Bondbond Coeff 63 cp sc cp
+WARNING unable to find bondbond info for Bondbond Coeff 64 cp sh hs
+WARNING unable to find bondbond info for Bondbond Coeff 71 np cp oc
+WARNING unable to find bondbond info for Bondbond Coeff 72 o= c=2 oh
+
+WARNING unable to find bondangle info for Bondangle Coeff 9 c1 cp c2
+WARNING unable to find bondangle info for Bondangle Coeff 11 c1 cp o_1
+WARNING unable to find bondangle info for Bondangle Coeff 12 c1 oh ho2
+WARNING unable to find bondangle info for Bondangle Coeff 21 c2 c5 hc
+WARNING unable to find bondangle info for Bondangle Coeff 23 c2 cp o_1
+WARNING unable to find bondangle info for Bondangle Coeff 24 c2 oc cp
+WARNING unable to find bondangle info for Bondangle Coeff 27 c5 c2 c5
+WARNING unable to find bondangle info for Bondangle Coeff 28 c5 c2 cp
+WARNING unable to find bondangle info for Bondangle Coeff 36 c5 oc cp
+WARNING unable to find bondangle info for Bondangle Coeff 37 c=2 cp cp
+WARNING unable to find bondangle info for Bondangle Coeff 38 c=2 oh ho2
+WARNING unable to find bondangle info for Bondangle Coeff 40 cp c2 cp
+WARNING unable to find bondangle info for Bondangle Coeff 42 cp c2 oc
+WARNING unable to find bondangle info for Bondangle Coeff 45 cp c=2 o=
+WARNING unable to find bondangle info for Bondangle Coeff 46 cp c=2 oh
+WARNING unable to find bondangle info for Bondangle Coeff 54 cp cp sc
+WARNING unable to find bondangle info for Bondangle Coeff 55 cp cp sh
+WARNING unable to find bondangle info for Bondangle Coeff 57 cp nn cp
+WARNING unable to find bondangle info for Bondangle Coeff 60 cp oc cp
+WARNING unable to find bondangle info for Bondangle Coeff 61 cp oh ho2
+WARNING unable to find bondangle info for Bondangle Coeff 63 cp sc cp
+WARNING unable to find bondangle info for Bondangle Coeff 64 cp sh hs
+WARNING unable to find bondangle info for Bondangle Coeff 71 np cp oc
+WARNING unable to find bondangle info for Bondangle Coeff 72 o= c=2 oh
+
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 4 c2 c1 c1 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 12 c2 c1 c2 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 13 cp c1 c2 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 14 c1 c1 c2 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 19 c2 c1 cp c2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 22 c2 c1 cp o_1
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 23 hc c1 cp o_1
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 24 c2 c1 oh ho2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 25 hc c1 oh ho2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 27 c1 c2 c1 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 35 c2 c2 c2 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 36 c1 c2 c2 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 37 cp c2 c2 cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 42 c5 c2 c5 c5
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 43 cp c2 c5 hc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 44 c5 c2 c5 hc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 45 hc c2 c5 hc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 47 c5 c2 cp cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 49 cp c2 cp cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 50 cp c2 cp o_1
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 51 hc c2 cp o_1
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 52 cp c2 oc cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 53 cp c2 c5 c5
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 56 c2 c5 c5 c2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 57 c2 c5 c5 c3
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 68 c3 c5 c5 oc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 69 c2 c5 c5 oc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 72 c5 c5 oc cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 73 cp c=2 oh ho2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 74 hc c1 cp c2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 76 cp c2 cp c1
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 77 hc c2 cp c1
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 79 oc c2 cp cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 82 o= c=2 cp cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 83 oh c=2 cp cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 84 c2 cp cp c2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 85 c1 cp cp c2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 86 c2 cp cp c3
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 87 c3 cp cp c3
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 92 c=2 cp cp cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 105 c3 cp cp np
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 107 c3 cp cp oc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 108 c2 cp cp oc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 110 c=2 cp cp oc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 111 c2 cp cp oh
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 113 nn cp cp oh
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 115 oc cp cp oh
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 117 c2 cp cp op
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 119 c2 cp cp sc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 120 hc cp cp sc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 121 cp cp cp sc
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 122 hc cp cp sh
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 123 cp cp cp sh
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 124 c2 cp cp sp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 125 c=2 cp cp sp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 127 cp cp nn cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 130 cp cp oc cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 131 cp cp oh ho2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 133 cp cp sc cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 134 cp cp sh hs
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 136 oc cp np cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 137 hc c2 oc cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 138 cp cp oc c2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 139 cp cp oc c5
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 140 np cp oc cp
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 141 np cp oc c2
+WARNING unable to find angleangletorsion info for Angleangletorsion Coeff 142 o= c=2 oh ho2
+
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 4 c2 c1 c1 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 12 c2 c1 c2 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 13 cp c1 c2 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 14 c1 c1 c2 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 19 c2 c1 cp c2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 22 c2 c1 cp o_1
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 23 hc c1 cp o_1
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 24 c2 c1 oh ho2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 25 hc c1 oh ho2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 27 c1 c2 c1 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 35 c2 c2 c2 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 36 c1 c2 c2 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 37 cp c2 c2 cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 42 c5 c2 c5 c5
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 43 cp c2 c5 hc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 44 c5 c2 c5 hc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 45 hc c2 c5 hc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 47 c5 c2 cp cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 49 cp c2 cp cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 50 cp c2 cp o_1
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 51 hc c2 cp o_1
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 52 cp c2 oc cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 53 cp c2 c5 c5
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 56 c2 c5 c5 c2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 57 c2 c5 c5 c3
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 68 c3 c5 c5 oc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 69 c2 c5 c5 oc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 72 c5 c5 oc cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 73 cp c=2 oh ho2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 74 hc c1 cp c2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 76 cp c2 cp c1
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 77 hc c2 cp c1
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 79 oc c2 cp cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 82 o= c=2 cp cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 83 oh c=2 cp cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 84 c2 cp cp c2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 85 c1 cp cp c2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 86 c2 cp cp c3
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 87 c3 cp cp c3
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 92 c=2 cp cp cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 105 c3 cp cp np
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 107 c3 cp cp oc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 108 c2 cp cp oc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 110 c=2 cp cp oc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 111 c2 cp cp oh
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 113 nn cp cp oh
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 115 oc cp cp oh
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 117 c2 cp cp op
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 119 c2 cp cp sc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 120 hc cp cp sc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 121 cp cp cp sc
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 122 hc cp cp sh
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 123 cp cp cp sh
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 124 c2 cp cp sp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 125 c=2 cp cp sp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 127 cp cp nn cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 130 cp cp oc cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 131 cp cp oh ho2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 133 cp cp sc cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 134 cp cp sh hs
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 136 oc cp np cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 137 hc c2 oc cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 138 cp cp oc c2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 139 cp cp oc c5
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 140 np cp oc cp
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 141 np cp oc c2
+WARNING unable to find endbondtorsion info for Endbondtorsion Coeff 142 o= c=2 oh ho2
+
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 4 c2 c1 c1 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 12 c2 c1 c2 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 13 cp c1 c2 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 14 c1 c1 c2 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 19 c2 c1 cp c2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 22 c2 c1 cp o_1
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 23 hc c1 cp o_1
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 24 c2 c1 oh ho2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 25 hc c1 oh ho2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 27 c1 c2 c1 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 35 c2 c2 c2 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 36 c1 c2 c2 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 37 cp c2 c2 cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 42 c5 c2 c5 c5
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 43 cp c2 c5 hc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 44 c5 c2 c5 hc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 45 hc c2 c5 hc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 47 c5 c2 cp cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 49 cp c2 cp cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 50 cp c2 cp o_1
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 51 hc c2 cp o_1
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 52 cp c2 oc cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 53 cp c2 c5 c5
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 56 c2 c5 c5 c2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 57 c2 c5 c5 c3
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 68 c3 c5 c5 oc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 69 c2 c5 c5 oc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 72 c5 c5 oc cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 73 cp c=2 oh ho2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 74 hc c1 cp c2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 76 cp c2 cp c1
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 77 hc c2 cp c1
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 79 oc c2 cp cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 82 o= c=2 cp cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 83 oh c=2 cp cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 84 c2 cp cp c2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 85 c1 cp cp c2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 86 c2 cp cp c3
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 87 c3 cp cp c3
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 92 c=2 cp cp cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 105 c3 cp cp np
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 107 c3 cp cp oc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 108 c2 cp cp oc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 110 c=2 cp cp oc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 111 c2 cp cp oh
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 113 nn cp cp oh
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 115 oc cp cp oh
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 117 c2 cp cp op
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 119 c2 cp cp sc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 120 hc cp cp sc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 121 cp cp cp sc
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 122 hc cp cp sh
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 123 cp cp cp sh
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 124 c2 cp cp sp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 125 c=2 cp cp sp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 127 cp cp nn cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 130 cp cp oc cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 131 cp cp oh ho2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 133 cp cp sc cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 134 cp cp sh hs
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 136 oc cp np cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 137 hc c2 oc cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 138 cp cp oc c2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 139 cp cp oc c5
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 140 np cp oc cp
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 141 np cp oc c2
+WARNING unable to find middlebondtorsion info for Middlebondtorsion Coeff 142 o= c=2 oh ho2
+
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 1 c1 c1 c1 c1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 2 c2 c1 c1 c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 3 c1 c1 c1 c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 4 c2 c1 c1 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 5 c2 c1 c1 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 6 cp c1 c1 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 7 hc c1 c1 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 8 c1 c1 c1 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 9 c1 c1 c2 c1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 10 c2 c1 c2 c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 11 c1 c1 c2 c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 12 c2 c1 c2 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 13 cp c1 c2 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 14 c1 c1 c2 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 15 cp c1 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 16 c1 c1 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 17 c2 c1 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 18 hc c1 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 19 c2 c1 cp c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 20 c1 c1 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 21 c2 c1 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 22 c2 c1 cp o_1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 23 hc c1 cp o_1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 24 c2 c1 oh ho2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 25 hc c1 oh ho2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 26 c1 c2 c1 c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 27 c1 c2 c1 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 28 c2 c2 c1 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 29 cp c2 c1 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 30 c1 c2 c1 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 31 c1 c2 c1 oh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 32 hc c2 c1 oh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 33 c2 c2 c1 oh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 34 c1 c2 c2 c1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 35 c2 c2 c2 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 36 c1 c2 c2 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 37 cp c2 c2 cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 38 cp c2 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 39 hc c2 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 40 c2 c2 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 41 c1 c2 c2 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 42 c5 c2 c5 c5
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 43 cp c2 c5 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 44 c5 c2 c5 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 45 hc c2 c5 hc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 46 c2 c2 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 47 c5 c2 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 48 c1 c2 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 49 cp c2 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 50 cp c2 cp o_1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 51 hc c2 cp o_1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 52 cp c2 oc cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 53 cp c2 c5 c5
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 56 c2 c5 c5 c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 57 c2 c5 c5 c3
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 68 c3 c5 c5 oc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 69 c2 c5 c5 oc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 72 c5 c5 oc cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 73 cp c=2 oh ho2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 74 hc c1 cp c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 76 cp c2 cp c1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 77 hc c2 cp c1
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 79 oc c2 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 82 o= c=2 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 83 oh c=2 cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 84 c2 cp cp c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 85 c1 cp cp c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 86 c2 cp cp c3
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 87 c3 cp cp c3
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 92 c=2 cp cp cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 105 c3 cp cp np
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 107 c3 cp cp oc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 108 c2 cp cp oc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 110 c=2 cp cp oc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 111 c2 cp cp oh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 113 nn cp cp oh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 115 oc cp cp oh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 117 c2 cp cp op
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 119 c2 cp cp sc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 120 hc cp cp sc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 121 cp cp cp sc
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 122 hc cp cp sh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 123 cp cp cp sh
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 124 c2 cp cp sp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 125 c=2 cp cp sp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 127 cp cp nn cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 130 cp cp oc cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 131 cp cp oh ho2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 133 cp cp sc cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 134 cp cp sh hs
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 136 oc cp np cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 137 hc c2 oc cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 138 cp cp oc c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 139 cp cp oc c5
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 140 np cp oc cp
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 141 np cp oc c2
+WARNING unable to find bondbond13 info for Bondbond13 Coeff 142 o= c=2 oh ho2
+
+WARNING unable to find angletorsion info for Angletorsion Coeff 4 c2 c1 c1 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 12 c2 c1 c2 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 13 cp c1 c2 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 14 c1 c1 c2 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 19 c2 c1 cp c2
+WARNING unable to find angletorsion info for Angletorsion Coeff 22 c2 c1 cp o_1
+WARNING unable to find angletorsion info for Angletorsion Coeff 23 hc c1 cp o_1
+WARNING unable to find angletorsion info for Angletorsion Coeff 24 c2 c1 oh ho2
+WARNING unable to find angletorsion info for Angletorsion Coeff 25 hc c1 oh ho2
+WARNING unable to find angletorsion info for Angletorsion Coeff 27 c1 c2 c1 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 35 c2 c2 c2 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 36 c1 c2 c2 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 37 cp c2 c2 cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 42 c5 c2 c5 c5
+WARNING unable to find angletorsion info for Angletorsion Coeff 43 cp c2 c5 hc
+WARNING unable to find angletorsion info for Angletorsion Coeff 44 c5 c2 c5 hc
+WARNING unable to find angletorsion info for Angletorsion Coeff 45 hc c2 c5 hc
+WARNING unable to find angletorsion info for Angletorsion Coeff 47 c5 c2 cp cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 49 cp c2 cp cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 50 cp c2 cp o_1
+WARNING unable to find angletorsion info for Angletorsion Coeff 51 hc c2 cp o_1
+WARNING unable to find angletorsion info for Angletorsion Coeff 52 cp c2 oc cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 53 cp c2 c5 c5
+WARNING unable to find angletorsion info for Angletorsion Coeff 56 c2 c5 c5 c2
+WARNING unable to find angletorsion info for Angletorsion Coeff 57 c2 c5 c5 c3
+WARNING unable to find angletorsion info for Angletorsion Coeff 68 c3 c5 c5 oc
+WARNING unable to find angletorsion info for Angletorsion Coeff 69 c2 c5 c5 oc
+WARNING unable to find angletorsion info for Angletorsion Coeff 72 c5 c5 oc cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 73 cp c=2 oh ho2
+WARNING unable to find angletorsion info for Angletorsion Coeff 74 hc c1 cp c2
+WARNING unable to find angletorsion info for Angletorsion Coeff 76 cp c2 cp c1
+WARNING unable to find angletorsion info for Angletorsion Coeff 77 hc c2 cp c1
+WARNING unable to find angletorsion info for Angletorsion Coeff 79 oc c2 cp cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 82 o= c=2 cp cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 83 oh c=2 cp cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 84 c2 cp cp c2
+WARNING unable to find angletorsion info for Angletorsion Coeff 85 c1 cp cp c2
+WARNING unable to find angletorsion info for Angletorsion Coeff 86 c2 cp cp c3
+WARNING unable to find angletorsion info for Angletorsion Coeff 87 c3 cp cp c3
+WARNING unable to find angletorsion info for Angletorsion Coeff 92 c=2 cp cp cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 105 c3 cp cp np
+WARNING unable to find angletorsion info for Angletorsion Coeff 107 c3 cp cp oc
+WARNING unable to find angletorsion info for Angletorsion Coeff 108 c2 cp cp oc
+WARNING unable to find angletorsion info for Angletorsion Coeff 110 c=2 cp cp oc
+WARNING unable to find angletorsion info for Angletorsion Coeff 111 c2 cp cp oh
+WARNING unable to find angletorsion info for Angletorsion Coeff 113 nn cp cp oh
+WARNING unable to find angletorsion info for Angletorsion Coeff 115 oc cp cp oh
+WARNING unable to find angletorsion info for Angletorsion Coeff 117 c2 cp cp op
+WARNING unable to find angletorsion info for Angletorsion Coeff 119 c2 cp cp sc
+WARNING unable to find angletorsion info for Angletorsion Coeff 120 hc cp cp sc
+WARNING unable to find angletorsion info for Angletorsion Coeff 121 cp cp cp sc
+WARNING unable to find angletorsion info for Angletorsion Coeff 122 hc cp cp sh
+WARNING unable to find angletorsion info for Angletorsion Coeff 123 cp cp cp sh
+WARNING unable to find angletorsion info for Angletorsion Coeff 124 c2 cp cp sp
+WARNING unable to find angletorsion info for Angletorsion Coeff 125 c=2 cp cp sp
+WARNING unable to find angletorsion info for Angletorsion Coeff 127 cp cp nn cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 130 cp cp oc cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 131 cp cp oh ho2
+WARNING unable to find angletorsion info for Angletorsion Coeff 133 cp cp sc cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 134 cp cp sh hs
+WARNING unable to find angletorsion info for Angletorsion Coeff 136 oc cp np cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 137 hc c2 oc cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 138 cp cp oc c2
+WARNING unable to find angletorsion info for Angletorsion Coeff 139 cp cp oc c5
+WARNING unable to find angletorsion info for Angletorsion Coeff 140 np cp oc cp
+WARNING unable to find angletorsion info for Angletorsion Coeff 141 np cp oc c2
+WARNING unable to find angletorsion info for Angletorsion Coeff 142 o= c=2 oh ho2
+
+WARNING unable to find angleangle info for Angleangle Coeff 29 c1 c1 c2 cp
+WARNING unable to find angleangle info for Angleangle Coeff 36 c2 c1 c2 cp
+WARNING unable to find angleangle info for Angleangle Coeff 44 c5 c2 c5 hc
+WARNING unable to find angleangle info for Angleangle Coeff 45 c5 c2 cp hc
+WARNING unable to find angleangle info for Angleangle Coeff 48 cp c2 cp hc
+WARNING unable to find angleangle info for Angleangle Coeff 50 cp c2 hc oc
+
+---------------------------------------
+System Unit cell, volume, mass, density
+---------------------------------------
+Lx:         60.05000  angstrom  
+Ly:         75.99500  angstrom  
+Lz:         71.30100  angstrom  
+volume:    3.2538E-19 cm^3      
+mass:      4.7499E-20 grams     
+density:    0.14598   g/cm^3    
+
+
+
+--------------------------------------
+Atoms/Bonds/Angles/Dihedrals/Impropers
+--------------------------------------
+natoms:            3640 
+nbonds:            4020 
+nangles:           7100 
+ndihedrals:        11170
+nimpropers:        3110 
+- oop:             1470 
+- angleangle:      1640 
+
+--------------------------------------------
+Atoms/Bonds/Angles/Dihedrals/Impropers Types
+--------------------------------------------
+natomtypes:         20  
+nbondtypes:         34  
+nangletypes:        72  
+ndihedraltypes:     142 
+nimpropertypes:     53  
+- oop:              25  
+- angleangle:       28  
+
+-------------------------------------
+Parameterization percentage breakdown
+-------------------------------------
+Masses:                      100.00 %
+Pair Coeffs:                 100.00 %
+Bond Coeffs:                 100.00 %
+Angle Coeffs:                100.00 %
+Dihedral Coeffs:             100.00 %
+Improper Coeffs:             100.00 %
+Average MPBADI Coeffs:       100.00 %
+BondBond Coeffs:             66.67  %
+BondAngle Coeffs:            66.67  %
+AngleAngleTorsion Coeffs:    52.82  %
+EndBondTorsion Coeffs:       52.82  %
+MiddleBondTorsion Coeffs:    52.82  %
+BondBond13 Coeffs:           31.69  %
+AngleTorsion Coeffs:         52.82  %
+AngleAngle Coeffs:           88.68  %
+Average (without Bond-incs): 77.66  %
+Bond-incs:                   97.01  %
+
+User is acknowledging that all2lmp.py can not supply a fully parameterized datafile as
+the frc_files/pcff.frc doesnt contain all parameters
+to parameterize every interaction. The user is responsible for deciding on how to handle
+missing parameters in the written datafile. Please note that it is possible that the inputs
+to all2lmp.py are incorrect causing this message and that a certain atom type maybe wrong, 
+where it might be easier to correct the inputs to all2lmp.py rather then correct the outputs
+of all2lmp.py. Alternativley missing parameters are set to ZEROs, by all2lmp.py and it is
+possible that interaction doesnt require parameters. For instance not all systems require
+dihedral interactions.
+
+
+Writing LAMMPS datafile
+Writing verbose comment file
+
+
+All outputs can be found in /home/nikant/Desktop/che622/Project/try3/lunar/ directory
+
+
+Each energy coeff Header in the written datafile contains style hint flags for
+applying proper settings in LAMMPS to be consistent with the energy definitions
+and ordering of the energy parameters.
+
+
+Normal program termination
+
+
+Execution time in seconds: 0.5347399711608887
+
+
+Number of WARNING(s) and ERROR(s)
+  659 WARNING(s)
+  0 ERROR(s)

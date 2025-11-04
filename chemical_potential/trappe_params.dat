@@ -1,0 +1,21 @@
+# Atom type definitions:
+# Type 1 = CH4   (methane united atom)
+# Type 2 = C_CO2 (carbon in CO2)
+# Type 3 = O_CO2 (oxygen in CO2)
+
+# Pure component interactions
+pair_coeff 1 1 0.294106 3.73   # CH4-CH4
+pair_coeff 2 2 0.053655 2.80   # C_CO2-C_CO2
+pair_coeff 3 3 0.156989 3.05   # O_CO2-O_CO2
+
+# =================================================
+# BOND PARAMETERS (CO2 only)
+# =================================================
+# Format: bond_coeff bond_type K(kcal/mol/Angstrom^2) r0(Angstrom)
+bond_coeff 1 1000.0 1.16  # C_CO2-O_CO2 bond
+
+# =================================================
+# ANGLE PARAMETERS (CO2 only)
+# =================================================
+# Format: angle_coeff angle_type K(kcal/mol/rad^2) theta0(degrees)
+angle_coeff 1 1000.0 180.0  # O_CO2-C_CO2-O_CO2 angle

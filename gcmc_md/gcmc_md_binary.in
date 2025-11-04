@@ -1,0 +1,83 @@
+# LAMMPS Input Script for Competitive CH4/CO2 GCMC Simulation
+# TraPPE-UA force field
+
+units real
+atom_style full
+boundary p p p
+
+read_data coal_relaxed.data
+
+# Masses
+mass 1 16.04    # CH4
+mass 2 12.01    # C in CO2  
+mass 3 15.999   # O in CO2
+
+# Pair style
+pair_style lj/cut/coul/long 14.0
+pair_modify mix arithmetic tail yes
+kspace_style pppm 1e-4
+
+# Load force field parameters
+include trappe_params.dat
+
+# Define molecule templates BEFORE using them
+molecule ch4_mol molecule_ch4.dat
+molecule co2_mol molecule_co2.dat
+
+# Define groups (dynamic for GCMC-inserted atoms)
+group coal type 4:20
+group ch4 dynamic all type 1
+group co2 dynamic all type 2:3
+group gases dynamic all type 1:3
+
+# Settings
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+timestep 1.0
+
+# System conditions
+variable temp equal 313.15      # K
+variable press equal 98.692     # 100 bar in atm
+
+# Chemical potentials (use Method 2 or 3 above)
+# These are EXAMPLE values - calculate properly!
+variable mu_ch4 equal -5.2      # kcal/mol
+variable mu_co2 equal -6.5      # kcal/mol
+
+# Output
+thermo_style custom step temp press pe ke etotal density atoms
+thermo 1000
+dump 1 all custom 10000 dump.lammpstrj id type x y z
+
+# Initial equilibration (NVT on coal only)
+fix nvt_coal coal nvt temp ${temp} ${temp} 100.0
+run 50000
+
+# COMPETITIVE GCMC SIMULATION (both species simultaneously)
+fix gcmc_ch4 ch4 gcmc 100 10 10 0 54321 ${temp} ${mu_ch4} 0.5 mol ch4_mol &
+    pressure ${press} region coal_region
+fix gcmc_co2 co2 gcmc 100 10 10 0 12345 ${temp} ${mu_co2} 0.5 mol co2_mol &
+    pressure ${press} region coal_region
+
+# Run competitive adsorption
+run 2000000
+
+# Analysis
+variable n_ch4 equal count(ch4)
+variable n_co2 equal count(co2)
+variable selectivity equal v_n_co2/v_n_ch4
+
+# Output results
+fix avg_n all ave/time 1000 10 10000 v_n_ch4 v_n_co2 v_selectivity &
+    file adsorption_data.txt
+
+run 1000000
+
+print "=================================="
+print "FINAL RESULTS:"
+print "CH4 molecules: ${n_ch4}"
+print "CO2 molecules: ${n_co2}"
+print "CO2/CH4 Selectivity: ${selectivity}"
+print "=================================="
+
+write_data final_structure.data

@@ -1,0 +1,43 @@
+# Step 3: NPT cooling from 1000K to 700K at 100 bar for 5 ns
+
+units real
+atom_style full
+boundary p p p
+
+# PCFF Force Field
+pair_style lj/class2/coul/long 12.0
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-4
+pair_modify mix sixthpower
+
+read_data step02_final.data
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+timestep 0.5
+
+thermo_style custom step temp press vol density etotal
+thermo 5000
+thermo_modify flush yes
+
+# ---------- Trajectory output ----------
+dump traj all atom 10000 step01_trajectory.dump
+dump_modify traj sort id
+
+# Write restart files every 200,000 steps (~100 ps)
+restart 50000 step01_restart_*.bin
+
+# NPT with linear temperature ramp
+fix npt3 all npt temp 1000.0 700.0 200.0 aniso 98.6923 98.6923 1000.0 pchain 3
+
+# Run for 5 ns (10,000,000 steps)
+run 2500000
+
+unfix npt3
+undump traj
+
+write_data step03_final.data

@@ -1,0 +1,10 @@
+# Packmol input file for coal matrix generation
+tolerance 2.0
+filetype pdb
+output coal_matrix_initial.pdb
+
+# Place 15 Wiser coal units randomly in 10x10x10 nm box
+structure wiser_single.pdb
+  number 10
+  inside box 0. 0. 0. 75. 75. 75.
+end structure
