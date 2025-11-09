@@ -3,6 +3,7 @@ TITLE     Built with Packmol
 REMARK   Packmol generated pdb file 
 REMARK   Home-Page: http://m3g.iqm.unicamp.br/packmol
 REMARK
+CRYST1   75.000   75.000   75.000  90.00  90.00  90.00 P 1           1
 HETATM    1  C   UNL A   1      68.929  70.901  24.625  1.00  0.00           C  
 HETATM    2  C   UNL A   1      66.553  71.437  24.789  1.00  0.00           C  
 HETATM    3  C   UNL A   1      67.741  70.918  25.341  1.00  0.00           C  

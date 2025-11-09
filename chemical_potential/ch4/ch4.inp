@@ -1,0 +1,45 @@
+# Pure CH4 bulk system setup
+units real
+dimension 3
+boundary p p p
+atom_style atomic
+
+# Create simulation box (adjust size as needed)
+region box block 0 50 0 50 0 50
+create_box 1 box
+
+# Define CH4 mass and interactions using TraPPE-UA model
+mass 1 16.04  # CH4 molecular weight
+
+# TraPPE-UA Lennard-Jones parameters for CH4
+pair_style lj/cut 14.0
+pair_coeff 1 1 0.294106 3.73   # cCH4-CH4  # epsilon (kcal/mol), sigma (Angstrom)
+
+# Use Lorentz-Berthelot mixing rules
+pair_modify mix arithmetic tail yes
+
+# Temperature and chemical potential settings
+variable T equal 313.15  # Temperature in K
+variable mu equal 0.0  # Chemical potential (kcal/mol)
+
+# Timestep and thermostat
+timestep 1.0  # fs
+fix thermostat all nvt temp ${T} ${T} 100.0
+
+# GCMC fix - insertion/deletion of CH4 molecules
+fix gcmc all gcmc 2000 500 50 1 49284 ${T} ${mu} 0.5
+
+# Output thermodynamic properties
+thermo_style custom step temp press vol atoms density
+thermo 100
+
+compute_modify thermo_temp dynamic/dof yes
+
+dump 1 all atom 1000 ch4_gcmc.lammpstrj
+
+# Run hybrid GCMC/MD simulation
+run 200000  # 50 ps equilibration
+delete_atoms overlap 0.8 all all 
+fix avg_press all ave/time 100 10 1000 c_thermo_press file pressure_avg.txt
+
+run 500000 # 100 ps production run for averaging

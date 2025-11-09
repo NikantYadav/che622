@@ -1,0 +1,26 @@
+# CO2 molecule template
+
+3 atoms
+2 bonds
+1 angles
+
+Coords
+
+ 1  0.00 0.0 0.0   # atom-ID x y z
+ 2  1.16 0.0 0.0
+ 3 -1.16 0.0 0.0
+
+Types
+
+ 1 2  # atom-ID atom-type (C atom)
+ 2 3  # atom-ID atom-type (O atom)
+ 3 3  # atom-ID atom-type (O atom)
+
+Bonds
+
+ 1 1 1 2  # bond-ID bond-type atom1 atom2
+ 2 1 1 3
+
+Angles
+
+ 1 1 2 1 3 # angle-ID angle-type atom1 atom2 atom3

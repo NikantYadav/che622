@@ -1,0 +1,31 @@
+ coal_model.xyz
+V_A^3    39649.114
+M _g/mol    28572.010
+RHO_g/cm^3        1.197
+PLD_A         1.28
+LCD_A         5.12
+ D            3
+ Total               
+S_AC_A^2         8.68
+S_AC_m^2/cm^3         2.19
+S_AC_m^2/g         1.83
+ Total               
+V_He_A^3     2349.095
+V_He_cm^3/g        0.050
+V_G_A^3    13424.858
+V_G cm^3/g:        0.283
+V_PO A^3:      477.925
+V_PO cm^3/g:        0.010
+FV_PO:      0.01205
+ Network-accessible  
+S_AC_A^2         0.00
+S_AC_m^2/cm^3         0.00
+S_AC_m^2/g         0.00
+ Network-accessible  
+V_He_A^3     2349.095
+V_He_cm^3/g        0.050
+V_G_A^3    13417.874
+V_G cm^3/g:        0.283
+V_PO A^3:        0.000
+V_PO cm^3/g:        0.000
+FV_PO:      0.00000

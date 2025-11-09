@@ -1,0 +1,51 @@
+units real
+dimension 3
+boundary p p p
+atom_style full
+
+region box block 0 50 0 50 0 50
+
+create_box 3 box &
+bond/types 1 &
+angle/types 1 &
+extra/bond/per/atom 5 &
+extra/angle/per/atom 5 &
+extra/special/per/atom 10
+
+mass 1 1.0      # Unused type
+mass 2 12.011   # C_CO2 (carbon in CO2)
+mass 3 15.999   # O_CO2 (oxygen in CO2)
+
+molecule co2template molecule_co2.dat
+
+pair_style lj/cut 14.0
+pair_coeff 1 1 0.0 1.0         # Unused type
+pair_coeff 2 2 0.053655 2.80   # C_CO2-C_CO2  # epsilon (kcal/mol), sigma (Angstrom)
+pair_coeff 3 3 0.156989 3.05   # O_CO2-O_CO2  # epsilon (kcal/mol), sigma (Angstrom)
+
+pair_modify mix arithmetic tail no
+
+bond_style harmonic
+bond_coeff 1 1000.0 1.16
+
+angle_style harmonic
+angle_coeff 1 1000.0 180.0
+
+variable T equal 313.15
+variable mu equal -10.0
+
+timestep 0.5
+fix thermostat all nvt temp ${T} ${T} 50.0
+
+fix gcmc all gcmc 2000 500 50 0 49284 ${T} ${mu} 0.5 mol co2template
+
+thermo_style custom step temp press atoms density
+thermo 100
+
+compute_modify thermo_temp dynamic/dof yes
+
+run 200000
+
+fix avg_press all ave/time 10 100 1000 c_thermo_press file pressure_avg.txt
+
+run 500000

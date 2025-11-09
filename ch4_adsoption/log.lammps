@@ -1,0 +1,171 @@
+LAMMPS (22 Jul 2025 - Update 1)
+# =============================================================================
+# LAMMPS Script for CH4 Adsorption Isotherm in Coal
+# FULLY CORRECTED - All force field styles defined before read_data
+# Coal: PCFF force field (your 20 atom types) + CH4: TraPPE-UA (type 21)
+# =============================================================================
+
+# ============ INITIALIZATION ============
+units           real
+atom_style      full
+boundary        p p p
+
+# ============ DEFINE ALL FORCE FIELD STYLES FIRST ============
+# CRITICAL: Must define ALL styles BEFORE read_data when data file contains coefficients
+# Your data file contains: Pair Coeffs, Bond Coeffs, Angle Coeffs, Dihedral Coeffs, Improper Coeffs
+
+# Pair interactions
+pair_style      lj/class2/coul/long 14.0
+pair_modify     mix geometric tail yes
+
+# Bonded interactions (PCFF class2)
+bond_style      class2
+angle_style     class2
+dihedral_style  class2
+improper_style  class2
+
+# Long-range interactions
+kspace_style    pppm 1.0e-5
+
+# ============ READ DATA WITH EXTRA ATOM TYPE ============
+# Now we can safely read data file since all styles are defined
+read_data       coal_structure.data extra/atom/types 1
+Reading data file ...
+  orthogonal box = (-18.498525 -24.247052 -9.040546) to (16.679505 14.019644 20.413205)
+  4 by 5 by 2 MPI processor grid
+  reading atoms ...
+  3640 atoms
+  reading velocities ...
+  3640 velocities
+  scanning bonds ...
+  4 = max bonds/atom
+  scanning angles ...
+  6 = max angles/atom
+  scanning dihedrals ...
+  21 = max dihedrals/atom
+  scanning impropers ...
+  4 = max impropers/atom
+  orthogonal box = (-18.498525 -24.247052 -9.040546) to (16.679505 14.019644 20.413205)
+  4 by 5 by 2 MPI processor grid
+  reading bonds ...
+  4020 bonds
+  reading angles ...
+  7100 angles
+  reading dihedrals ...
+  11170 dihedrals
+  reading impropers ...
+  3110 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     4 = max # of 1-2 neighbors
+     9 = max # of 1-3 neighbors
+    24 = max # of 1-4 neighbors
+    27 = max # of special neighbors
+  special bonds CPU = 0.003 seconds
+  read_data CPU = 0.403 seconds
+
+# ============ DEFINE MASSES ============
+# Add CH4 mass for type 21 (coal masses 1-20 are already in data file)
+mass            21 16.04    # CH4 molecular weight (TraPPE-UA)
+
+# ============ ADDITIONAL PAIR COEFFICIENTS ============
+# Your PCFF parameters (types 1-20) are loaded from data file
+# Only need to add TraPPE-UA parameters for CH4 (type 21)
+pair_coeff      21 21 0.294106 3.73   # CH4-CH4: epsilon (kcal/mol), sigma (Angstrom)
+
+# Cross-interactions between CH4 (type 21) and coal atoms (types 1-20)
+# will be calculated automatically via geometric mixing rule
+
+# ============ NEIGHBOR SETTINGS ============
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+# ============ GROUPS ============
+group           coal type 1:20      # Your coal atoms
+3640 atoms in group coal
+group           methane type 21     # CH4 atoms (to be inserted via GCMC)
+0 atoms in group methane
+
+# ============ SYSTEM PROPERTIES ============
+variable        vol equal vol
+variable        temp equal 298.15
+variable        lx equal lx
+variable        ly equal ly
+variable        lz equal lz
+
+print           "System volume: ${vol} A^3"
+System volume: 39649.0770159341 A^3
+print           "Box dimensions: ${lx} x ${ly} x ${lz} A"
+Box dimensions: 35.1780299881456 x 38.2666953673279 x 29.4537507992592 A
+print           "Coal atoms: $(count(coal))"
+Coal atoms: 3640
+
+# ============ INITIAL SETUP ============
+reset_timestep  0
+
+# ============ MINIMIZATION ============
+minimize        1.0e-6 1.0e-4 5000 50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470757
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021182883
+  estimated relative force accuracy = 6.3791624e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 16
+  ghost atom cutoff = 16
+  binsize = 8, bins = 5 5 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/class2/coul/long, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.38 | 19.39 | 19.57 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   308.79268     -2374.8409      21256.612      22231.298      2313.2976    
+       432   308.79268     -2571.9184      17988.12       18765.728      905.60431    
+Loop time of 5.38354 on 40 procs for 432 steps with 3640 atoms
+
+98.3% CPU use with 40 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+      18881.7715539487   15416.2140077414   15416.2015469256
+  Force two-norm initial, final = 2371.6272 6.376642
+  Force max component initial, final = 119.48826 1.5937279
+  Final line search alpha, max atom move = 0.016753514 0.026700544
+  Iterations, force evaluations = 432 864
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 2.0508     | 2.6013     | 3.2937     |  15.5 | 48.32
+Bond    | 0.20441    | 0.28917    | 0.37928    |   8.2 |  5.37
+Kspace  | 1.3897     | 2.1601     | 2.7913     |  19.4 | 40.12
+Neigh   | 0.024751   | 0.024975   | 0.025228   |   0.1 |  0.46
+Comm    | 0.24488    | 0.25226    | 0.26208    |   0.8 |  4.69
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.05582    |            |       |  1.04
+
+Nlocal:             91 ave         110 max          75 min
+Histogram: 3 4 2 4 12 4 4 2 3 2
+Nghost:        6856.55 ave        6926 max        6787 min
+Histogram: 2 2 3 9 5 4 5 5 4 1
+Neighs:        71616.2 ave       90057 max       59955 min
+Histogram: 6 2 10 6 4 5 3 1 1 2
+
+Total # of neighbors = 2864649
+Ave neighs/atom = 786.99148
+Ave special neighs/atom = 11.554945
+Neighbor list builds = 4
+Dangerous builds = 0

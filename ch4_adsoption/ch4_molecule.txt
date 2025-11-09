@@ -1,0 +1,19 @@
+# TraPPE-UA CH4 molecule template
+# Single united atom representation
+
+1 atoms
+0 bonds  
+0 angles
+0 dihedrals
+
+Coords
+
+1 0.0 0.0 0.0
+
+Types
+
+1 21
+
+Charges
+
+1 0.0
