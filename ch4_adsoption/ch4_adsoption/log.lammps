@@ -1,0 +1,1096 @@
+LAMMPS (22 Jul 2025 - Update 1)
+# =============================================================================
+# LAMMPS Script for CH4 Adsorption Isotherm in Coal
+# EVERY LINE VALIDATED AGAINST LAMMPS DOCUMENTATION
+# Coal: PCFF force field (20 atom types) + CH4: TraPPE-UA (type 21)
+# =============================================================================
+
+# ============ INITIALIZATION ============
+units           real
+atom_style      full
+boundary        p p p
+
+# ============ DEFINE ALL FORCE FIELD STYLES FIRST ============
+# Required before read_data when data file contains coefficients
+pair_style      lj/class2/coul/long 14.0
+pair_modify     mix geometric tail yes
+bond_style      class2
+angle_style     class2
+dihedral_style  class2
+improper_style  class2
+kspace_style    pppm 1.0e-5
+
+# ============ READ DATA WITH EXTRA ATOM TYPE ============
+read_data       coal_structure.data extra/atom/types 1
+Reading data file ...
+  orthogonal box = (-18.498525 -24.247052 -9.040546) to (16.679505 14.019644 20.413205)
+  4 by 5 by 2 MPI processor grid
+  reading atoms ...
+  3640 atoms
+  reading velocities ...
+  3640 velocities
+  scanning bonds ...
+  4 = max bonds/atom
+  scanning angles ...
+  6 = max angles/atom
+  scanning dihedrals ...
+  21 = max dihedrals/atom
+  scanning impropers ...
+  4 = max impropers/atom
+  orthogonal box = (-18.498525 -24.247052 -9.040546) to (16.679505 14.019644 20.413205)
+  4 by 5 by 2 MPI processor grid
+  reading bonds ...
+  4020 bonds
+  reading angles ...
+  7100 angles
+  reading dihedrals ...
+  11170 dihedrals
+  reading impropers ...
+  3110 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     4 = max # of 1-2 neighbors
+     9 = max # of 1-3 neighbors
+    24 = max # of 1-4 neighbors
+    27 = max # of special neighbors
+  special bonds CPU = 0.003 seconds
+  read_data CPU = 0.397 seconds
+
+# ============ DEFINE MASSES ============
+mass            21 16.04    # CH4 molecular weight (TraPPE-UA)
+
+# ============ ADDITIONAL PAIR COEFFICIENTS ============
+pair_coeff      21 21 0.294106 3.73   # CH4-CH4: TraPPE-UA parameters
+
+# ============ NEIGHBOR SETTINGS ============
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+# ============ GROUPS ============
+group           coal type 1:20
+3640 atoms in group coal
+group           methane type 21
+0 atoms in group methane
+
+# ============ SYSTEM PROPERTIES ============
+variable        vol equal vol
+variable        temp equal 298.15
+
+print           "System volume: ${vol} A^3"
+System volume: 39649.0770159341 A^3
+print           "Coal atoms: $(count(coal))"
+Coal atoms: 3640
+
+# ============ INITIAL SETUP ============
+reset_timestep  0
+
+# ============ MINIMIZATION ============
+minimize        1.0e-6 1.0e-4 5000 50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470757
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021182883
+  estimated relative force accuracy = 6.3791624e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 16
+  ghost atom cutoff = 16
+  binsize = 8, bins = 5 5 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/class2/coul/long, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 19.38 | 19.39 | 19.57 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   308.79268     -2374.8409      21256.612      22231.298      2313.2976    
+       432   308.79268     -2571.9184      17988.12       18765.728      905.60431    
+Loop time of 5.35414 on 40 procs for 432 steps with 3640 atoms
+
+98.3% CPU use with 40 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+      18881.7715539487   15416.2140077414   15416.2015469256
+  Force two-norm initial, final = 2371.6272 6.376642
+  Force max component initial, final = 119.48826 1.5937279
+  Final line search alpha, max atom move = 0.016753514 0.026700544
+  Iterations, force evaluations = 432 864
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 2.1536     | 2.5963     | 3.3247     |  15.9 | 48.49
+Bond    | 0.18667    | 0.28754    | 0.38504    |   8.2 |  5.37
+Kspace  | 1.336      | 2.1446     | 2.6763     |  19.8 | 40.05
+Neigh   | 0.019789   | 0.020028   | 0.020255   |   0.1 |  0.37
+Comm    | 0.24273    | 0.25059    | 0.25902    |   0.8 |  4.68
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.05509    |            |       |  1.03
+
+Nlocal:             91 ave         110 max          75 min
+Histogram: 3 4 2 4 12 4 4 2 3 2
+Nghost:        6856.55 ave        6926 max        6787 min
+Histogram: 2 2 3 9 5 4 5 5 4 1
+Neighs:        71616.2 ave       90057 max       59955 min
+Histogram: 6 2 10 6 4 5 3 1 1 2
+
+Total # of neighbors = 2864649
+Ave neighs/atom = 786.99148
+Ave special neighs/atom = 11.554945
+Neighbor list builds = 4
+Dangerous builds = 0
+
+# ============ INITIAL EQUILIBRATION ============
+velocity        coal create ${temp} 12345
+velocity        coal create 298.15 12345
+fix             nvt_equil coal nvt temp ${temp} ${temp} 100.0
+fix             nvt_equil coal nvt temp 298.15 ${temp} 100.0
+fix             nvt_equil coal nvt temp 298.15 298.15 100.0
+timestep        1.0
+run             25000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470757
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021182883
+  estimated relative force accuracy = 6.3791624e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+Per MPI rank memory allocation (min/avg/max) = 18.25 | 18.26 | 18.45 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+       432   298.15        -2571.9184      17988.12       18650.285      772.5077     
+     25432   304.0218      -2360.8532      21159.261      22096.183     -2239.2808    
+Loop time of 109.303 on 40 procs for 25000 steps with 3640 atoms
+
+Performance: 19.762 ns/day, 1.214 hours/ns, 228.722 timesteps/s, 832.548 katom-step/s
+97.7% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 38.944     | 46.2       | 56.697     |  57.6 | 42.27
+Bond    | 5.7019     | 7.461      | 9.4414     |  35.3 |  6.83
+Kspace  | 28.921     | 40.941     | 49.447     |  70.7 | 37.46
+Neigh   | 5.2612     | 5.2737     | 5.2904     |   0.4 |  4.82
+Comm    | 7.8132     | 7.9715     | 8.1327     |   2.8 |  7.29
+Output  | 7.0153e-05 | 7.2371e-05 | 0.00010118 |   0.0 |  0.00
+Modify  | 0.59684    | 0.63959    | 0.66523    |   2.0 |  0.59
+Other   |            | 0.8156     |            |       |  0.75
+
+Nlocal:             91 ave         108 max          74 min
+Histogram: 1 3 6 6 3 7 4 7 0 3
+Nghost:        6855.52 ave        6917 max        6803 min
+Histogram: 5 1 5 4 6 7 8 2 0 2
+Neighs:        71627.8 ave       93239 max       59328 min
+Histogram: 6 2 9 8 6 3 4 0 1 1
+
+Total # of neighbors = 2865113
+Ave neighs/atom = 787.11896
+Ave special neighs/atom = 11.554945
+Neighbor list builds = 1012
+Dangerous builds = 0
+unfix           nvt_equil
+
+# ============ GCMC SETUP ============
+molecule        ch4_mol ch4_molecule.txt
+Read molecule template ch4_mol:
+# TraPPE-UA CH4 molecule template
+  1 molecules
+  0 fragments
+  0 bodies
+  1 atoms with max type 21
+  0 bonds with max type 0
+  0 angles with max type 0
+  0 dihedrals with max type 0
+  0 impropers with max type 0
+
+# Thermostat for all atoms during GCMC
+fix             nvt_gcmc all nvt temp ${temp} ${temp} 100.0
+fix             nvt_gcmc all nvt temp 298.15 ${temp} 100.0
+fix             nvt_gcmc all nvt temp 298.15 298.15 100.0
+
+# Constants
+variable        kb equal 0.0019872041
+variable        total_coal_mass equal 45500.0    # Approximate mass in mg
+
+# Create compute to count CH4 atoms (LAMMPS documentation validated)
+compute         count_ch4 methane count/type atom
+
+# Output file header
+print           "# CH4 Adsorption Isotherm - Coal Model" file isotherm_results.dat
+# CH4 Adsorption Isotherm - Coal Model
+print           "# System: 3640 atoms, 20 types, PCFF class2 + TraPPE-UA" append isotherm_results.dat
+# System: 3640 atoms, 20 types, PCFF class2 + TraPPE-UA
+print           "# Temperature: ${temp} K, Volume: ${vol} A^3" append isotherm_results.dat
+# Temperature: 298.15 K, Volume: 39649.0770159341 A^3
+print           "# Pressure(bar) N_CH4 Loading(mg/g) Loading(mmol/g) Density Chemical_Potential" append isotherm_results.dat
+# Pressure(bar) N_CH4 Loading(mg/g) Loading(mmol/g) Density Chemical_Potential
+
+# ============ PRESSURE POINT 1: 0.5 bar ============
+variable        pressure equal 0.5
+variable        mu equal -9.44634
+
+print           "Pressure: ${pressure} bar, mu: ${mu} kcal/mol"
+Pressure: 0.5 bar, mu: -9.44634 kcal/mol
+
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 ${temp} ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 -9.44634 1.5                 mol ch4_mol maxangle 10 full_energy
+
+# Equilibration with DOCUMENTATION-VALIDATED thermo_style
+variable        nequil equal 50000
+thermo          5000
+thermo_style    custom step temp press vol v_pressure atoms
+run             ${nequil}
+run             50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470757
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021182883
+  estimated relative force accuracy = 6.3791624e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_fix
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.25 | 18.26 | 18.26 Mbytes
+   Step          Temp          Press          Volume       v_pressure      Atoms   
+     25432   304.0218      -2239.2808      39649.077      0.5                 3640 
+     30000   301.28521     -828.90865      39649.077      0.5                 3643 
+     35000   297.6443       1803.5951      39649.077      0.5                 3641 
+     40000   287.64429      459.26019      39649.077      0.5                 3641 
+     45000   298.38381     -1283.2435      39649.077      0.5                 3641 
+     50000   299.20039     -3178.9212      39649.077      0.5                 3644 
+     55000   297.25883     -1989.0412      39649.077      0.5                 3642 
+     60000   300.64748     -782.01117      39649.077      0.5                 3643 
+     65000   301.57044     -975.10386      39649.077      0.5                 3642 
+     70000   295.4256      -56.159777      39649.077      0.5                 3644 
+     75000   303.80431     -528.76189      39649.077      0.5                 3640 
+     75432   298.83988     -2192.3014      39649.077      0.5                 3642 
+Loop time of 1165.59 on 40 procs for 50000 steps with 3642 atoms
+
+Performance: 3.706 ns/day, 6.475 hours/ns, 42.897 timesteps/s, 156.230 katom-step/s
+98.6% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 79.147     | 93.402     | 114.94     |  86.6 |  8.01
+Bond    | 11.545     | 15.03      | 20.129     |  48.4 |  1.29
+Kspace  | 59.387     | 83.775     | 100.33     | 104.1 |  7.19
+Neigh   | 21.9       | 21.951     | 22.005     |   0.8 |  1.88
+Comm    | 16.036     | 16.394     | 16.762     |   5.1 |  1.41
+Output  | 0.00077823 | 0.00079939 | 0.001191   |   0.0 |  0.00
+Modify  | 933.3      | 933.37     | 933.41     |   0.1 | 80.08
+Other   |            | 1.668      |            |       |  0.14
+
+Nlocal:          91.05 ave         106 max          72 min
+Histogram: 1 0 2 7 5 7 6 8 2 2
+Nghost:           6845 ave        6913 max        6745 min
+Histogram: 1 1 2 3 4 11 7 3 5 3
+Neighs:        71701.2 ave       83529 max       55111 min
+Histogram: 1 1 4 4 7 1 7 6 6 3
+
+Total # of neighbors = 2868048
+Ave neighs/atom = 787.49259
+Ave special neighs/atom = 11.5486
+Neighbor list builds = 51174
+Dangerous builds = 0
+
+# Production
+variable        nprod equal 100000
+variable        n_ch4 equal count(methane)
+variable        ch4_mw equal 16.04
+variable        loading_mg_g equal v_n_ch4*${ch4_mw}*1000/v_total_coal_mass
+variable        loading_mg_g equal v_n_ch4*16.04*1000/v_total_coal_mass
+variable        loading_mmol_g equal v_n_ch4*1000/v_total_coal_mass
+variable        density_molec_A3 equal v_n_ch4/v_vol
+
+fix             stats all ave/time 500 50 50000 v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3                 file production_0.5bar.dat
+
+thermo          10000
+thermo_style    custom step temp press vol atoms v_n_ch4
+run             ${nprod}
+run             100000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470757
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021177066
+  estimated relative force accuracy = 6.3774106e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.32 | 18.34 | 18.7 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+     75432   298.67573     -2192.3014      39649.077           3642   2            
+     80000   295.51826     -166.16876      39649.077           3644   4            
+     90000   296.43161     -2102.0522      39649.077           3641   1            
+    100000   303.99311     -1747.1944      39649.077           3640   0            
+    110000   296.2624      -1541.9156      39649.077           3641   1            
+    120000   295.70109     -4130.2256      39649.077           3642   2            
+    130000   292.23394     -243.26568      39649.077           3643   3            
+    140000   295.88217     -396.94129      39649.077           3642   2            
+    150000   303.67347     -377.56006      39649.077           3643   3            
+    160000   298.11269     -1724.8131      39649.077           3641   1            
+    170000   294.17706     -23.957807      39649.077           3641   1            
+    175432   293.17291     -1538.9399      39649.077           3640   0            
+Loop time of 2302.73 on 40 procs for 100000 steps with 3640 atoms
+
+Performance: 3.752 ns/day, 6.396 hours/ns, 43.427 timesteps/s, 158.073 katom-step/s
+98.6% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 160.85     | 188.44     | 227.34     | 121.9 |  8.18
+Bond    | 24.513     | 30.095     | 36.277     |  54.5 |  1.31
+Kspace  | 125.95     | 167.69     | 198.58     | 144.4 |  7.28
+Neigh   | 44.021     | 44.153     | 44.28      |   1.7 |  1.92
+Comm    | 32.2       | 32.938     | 33.718     |   8.2 |  1.43
+Output  | 0.0010034  | 0.0010255  | 0.0013035  |   0.1 |  0.00
+Modify  | 1835.9     | 1836.1     | 1836.2     |   0.2 | 79.74
+Other   |            | 3.332      |            |       |  0.14
+
+Nlocal:             91 ave         110 max          71 min
+Histogram: 1 1 5 3 8 11 6 1 3 1
+Nghost:        6824.25 ave        6908 max        6755 min
+Histogram: 2 3 7 8 4 3 7 4 0 2
+Neighs:          71619 ave       89687 max       58720 min
+Histogram: 3 7 6 6 3 3 7 2 0 3
+
+Total # of neighbors = 2864760
+Ave neighs/atom = 787.02198
+Ave special neighs/atom = 11.554945
+Neighbor list builds = 101092
+Dangerous builds = 0
+
+# Output results
+variable        final_n_ch4 equal v_n_ch4
+variable        final_loading_mg_g equal v_loading_mg_g
+variable        final_loading_mmol_g equal v_loading_mmol_g
+variable        final_density equal v_density_molec_A3
+print           "${pressure} ${final_n_ch4} ${final_loading_mg_g} ${final_loading_mmol_g} ${final_density} ${mu}" append isotherm_results.dat
+0.5 0 0 0 0 -9.44634
+
+unfix           gcmc_fix
+unfix           stats
+print           "Completed: P=${pressure} bar, N_CH4=${final_n_ch4}, Loading=${final_loading_mg_g} mg/g"
+Completed: P=0.5 bar, N_CH4=0, Loading=0 mg/g
+
+# ============ PRESSURE POINT 2: 2.0 bar ============
+variable        pressure equal 2.0
+variable        mu equal -8.70186
+
+print           "Pressure: ${pressure} bar, mu: ${mu} kcal/mol"
+Pressure: 2 bar, mu: -8.70186 kcal/mol
+
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 ${temp} ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 -8.70186 1.5                 mol ch4_mol maxangle 10 full_energy
+
+run             ${nequil}
+run             50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470757
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021182883
+  estimated relative force accuracy = 6.3791624e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_fix
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.25 | 18.31 | 18.64 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    175432   293.33403     -1538.9399      39649.077           3640   0            
+    180000   300.04741      2092.4689      39649.077           3642   2            
+    190000   301.33713      166.06351      39649.077           3646   6            
+    200000   286.75414     -1114.6016      39649.077           3648   8            
+    210000   298.31223     -879.4254       39649.077           3648   8            
+    220000   300.15321     -1028.8576      39649.077           3650   10           
+    225432   299.18157      1074.1823      39649.077           3646   6            
+Loop time of 1211.94 on 40 procs for 50000 steps with 3646 atoms
+
+Performance: 3.565 ns/day, 6.733 hours/ns, 41.256 timesteps/s, 150.420 katom-step/s
+98.6% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 77.993     | 94.714     | 117.99     |  95.0 |  7.82
+Bond    | 10.971     | 15.043     | 19.124     |  51.7 |  1.24
+Kspace  | 59.985     | 86.112     | 106.61     | 116.2 |  7.11
+Neigh   | 22.564     | 22.627     | 22.687     |   1.1 |  1.87
+Comm    | 16.2       | 16.534     | 17.073     |   5.7 |  1.36
+Output  | 0.00057268 | 0.00058779 | 0.00079458 |   0.0 |  0.00
+Modify  | 975.18     | 975.24     | 975.3      |   0.1 | 80.47
+Other   |            | 1.67       |            |       |  0.14
+
+Nlocal:          91.15 ave         106 max          72 min
+Histogram: 1 0 5 4 6 5 5 9 3 2
+Nghost:        6840.65 ave        6896 max        6762 min
+Histogram: 2 1 4 2 4 4 7 7 6 3
+Neighs:        71841.3 ave       87386 max       58960 min
+Histogram: 4 4 6 4 4 8 2 3 2 3
+
+Total # of neighbors = 2873653
+Ave neighs/atom = 788.16594
+Ave special neighs/atom = 11.53593
+Neighbor list builds = 52800
+Dangerous builds = 0
+
+fix             stats all ave/time 500 50 50000 v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3                 file production_2.0bar.dat
+
+run             ${nprod}
+run             100000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021165447
+  estimated relative force accuracy = 6.3739114e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.32 | 18.4 | 18.7 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    225432   298.68909      1074.1823      39649.077           3646   6            
+    230000   304.80696     -702.37214      39649.077           3643   3            
+    240000   298.12018      657.22547      39649.077           3648   8            
+    250000   299.13338     -2026.5692      39649.077           3647   7            
+    260000   294.373       -3005.4403      39649.077           3647   7            
+    270000   303.1612      -455.94709      39649.077           3644   4            
+    280000   294.08901     -55.124266      39649.077           3648   8            
+    290000   293.05621     -867.04818      39649.077           3647   7            
+    300000   297.40808     -183.53742      39649.077           3646   6            
+    310000   293.7782      -1101.511       39649.077           3642   2            
+    320000   302.01219     -3180.7493      39649.077           3645   5            
+    325432   291.65516     -645.61246      39649.077           3646   6            
+Loop time of 2413.65 on 40 procs for 100000 steps with 3646 atoms
+
+Performance: 3.580 ns/day, 6.705 hours/ns, 41.431 timesteps/s, 151.057 katom-step/s
+98.6% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 156.75     | 187.7      | 232.54     | 126.5 |  7.78
+Bond    | 23.606     | 29.998     | 38.153     |  61.7 |  1.24
+Kspace  | 118.36     | 169.94     | 204.09     | 152.1 |  7.04
+Neigh   | 44.323     | 44.441     | 44.551     |   1.5 |  1.84
+Comm    | 32.673     | 33.189     | 33.863     |   6.7 |  1.38
+Output  | 0.00094802 | 0.00097311 | 0.0012297  |   0.0 |  0.00
+Modify  | 1945       | 1945.1     | 1945.2     |   0.1 | 80.59
+Other   |            | 3.314      |            |       |  0.14
+
+Nlocal:          91.15 ave         109 max          72 min
+Histogram: 1 1 6 3 7 8 7 5 0 2
+Nghost:        6832.07 ave        6904 max        6785 min
+Histogram: 7 3 5 7 6 2 4 3 2 1
+Neighs:        71836.4 ave       90373 max       59424 min
+Histogram: 6 5 2 7 6 5 4 3 1 1
+
+Total # of neighbors = 2873455
+Ave neighs/atom = 788.11163
+Ave special neighs/atom = 11.53593
+Neighbor list builds = 106400
+Dangerous builds = 0
+
+variable        final_n_ch4 equal v_n_ch4
+variable        final_loading_mg_g equal v_loading_mg_g
+variable        final_loading_mmol_g equal v_loading_mmol_g
+variable        final_density equal v_density_molec_A3
+print           "${pressure} ${final_n_ch4} ${final_loading_mg_g} ${final_loading_mmol_g} ${final_density} ${mu}" append isotherm_results.dat
+2 6 2.11516483516484 0.131868131868132 0.000151327608397762 -8.70186
+
+unfix           gcmc_fix
+unfix           stats
+print           "Completed: P=${pressure} bar, N_CH4=${final_n_ch4}, Loading=${final_loading_mg_g} mg/g"
+Completed: P=2 bar, N_CH4=6, Loading=2.11516483516484 mg/g
+
+# ============ PRESSURE POINT 3: 5.0 bar ============
+variable        pressure equal 5.0
+variable        mu equal -8.20956
+
+print           "Pressure: ${pressure} bar, mu: ${mu} kcal/mol"
+Pressure: 5 bar, mu: -8.20956 kcal/mol
+
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 ${temp} ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 -8.20956 1.5                 mol ch4_mol maxangle 10 full_energy
+
+run             ${nequil}
+run             50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021165447
+  estimated relative force accuracy = 6.3739114e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_fix
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.26 | 18.4 | 19.17 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    325432   291.65516     -645.61246      39649.077           3646   6            
+    330000   297.27938     -718.44241      39649.077           3651   11           
+    340000   305.04304      1043.6476      39649.077           3652   12           
+    350000   299.00652     -622.36793      39649.077           3651   11           
+    360000   304.70948     -1119.1057      39649.077           3654   14           
+    370000   291.10173     -2400.8385      39649.077           3653   13           
+    375432   295.94228     -39.756637      39649.077           3653   13           
+Loop time of 1180.34 on 40 procs for 50000 steps with 3653 atoms
+
+Performance: 3.660 ns/day, 6.557 hours/ns, 42.361 timesteps/s, 154.744 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 70.388     | 92.901     | 113.24     |  93.7 |  7.87
+Bond    | 11.457     | 14.969     | 18.978     |  42.2 |  1.27
+Kspace  | 57.028     | 80.721     | 106.83     | 114.3 |  6.84
+Neigh   | 21.54      | 21.595     | 21.646     |   0.9 |  1.83
+Comm    | 16.401     | 16.682     | 17.014     |   4.4 |  1.41
+Output  | 0.00057065 | 0.00058545 | 0.00079638 |   0.0 |  0.00
+Modify  | 951.77     | 951.83     | 951.89     |   0.1 | 80.64
+Other   |            | 1.636      |            |       |  0.14
+
+Nlocal:         91.325 ave         105 max          76 min
+Histogram: 3 3 0 4 6 6 8 7 2 1
+Nghost:        6892.73 ave        6936 max        6841 min
+Histogram: 1 1 4 4 8 5 5 7 4 1
+Neighs:        72137.1 ave       91004 max       58330 min
+Histogram: 4 4 3 6 9 6 6 0 1 1
+
+Total # of neighbors = 2885484
+Ave neighs/atom = 789.89433
+Ave special neighs/atom = 11.513824
+Neighbor list builds = 53474
+Dangerous builds = 0
+
+fix             stats all ave/time 500 50 50000 v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3                 file production_5.0bar.dat
+
+run             ${nprod}
+run             100000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021145158
+  estimated relative force accuracy = 6.3678016e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.32 | 18.49 | 19.24 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    375432   295.37503     -39.756638      39649.077           3653   13           
+    380000   300.47439     -693.28692      39649.077           3652   12           
+    390000   303.69099      956.07911      39649.077           3649   9            
+    400000   294.2055      -869.06098      39649.077           3649   9            
+    410000   301.51024     -1616.2919      39649.077           3649   9            
+    420000   295.83829     -1545.7252      39649.077           3650   10           
+    430000   300.14078     -87.814232      39649.077           3651   11           
+    440000   301.15777     -670.23146      39649.077           3646   6            
+    450000   293.99009     -2903.5123      39649.077           3650   10           
+    460000   290.12075     -529.44912      39649.077           3652   12           
+    470000   287.99182     -1955.8601      39649.077           3647   7            
+    475432   296.34936      504.89302      39649.077           3651   11           
+Loop time of 2367.09 on 40 procs for 100000 steps with 3651 atoms
+
+Performance: 3.650 ns/day, 6.575 hours/ns, 42.246 timesteps/s, 154.240 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 145.58     | 185.79     | 224.77     | 134.8 |  7.85
+Bond    | 24.512     | 29.926     | 35.42      |  51.4 |  1.26
+Kspace  | 119.25     | 162.25     | 208.18     | 161.1 |  6.85
+Neigh   | 43.391     | 43.531     | 43.665     |   1.8 |  1.84
+Comm    | 32.986     | 33.587     | 34.457     |   7.9 |  1.42
+Output  | 0.00092286 | 0.00094257 | 0.001199   |   0.0 |  0.00
+Modify  | 1908.5     | 1908.7     | 1908.9     |   0.2 | 80.64
+Other   |            | 3.279      |            |       |  0.14
+
+Nlocal:         91.275 ave         103 max          78 min
+Histogram: 2 3 4 1 5 9 6 2 5 3
+Nghost:        6854.68 ave        6912 max        6794 min
+Histogram: 2 3 2 6 5 6 4 7 4 1
+Neighs:        72036.9 ave       88794 max       60748 min
+Histogram: 5 3 8 6 5 4 4 1 1 3
+
+Total # of neighbors = 2881477
+Ave neighs/atom = 789.22953
+Ave special neighs/atom = 11.520131
+Neighbor list builds = 106957
+Dangerous builds = 0
+
+variable        final_n_ch4 equal v_n_ch4
+variable        final_loading_mg_g equal v_loading_mg_g
+variable        final_loading_mmol_g equal v_loading_mmol_g
+variable        final_density equal v_density_molec_A3
+print           "${pressure} ${final_n_ch4} ${final_loading_mg_g} ${final_loading_mmol_g} ${final_density} ${mu}" append isotherm_results.dat
+5 11 3.8778021978022 0.241758241758242 0.000277433948729231 -8.20956
+
+unfix           gcmc_fix
+unfix           stats
+print           "Completed: P=${pressure} bar, N_CH4=${final_n_ch4}, Loading=${final_loading_mg_g} mg/g"
+Completed: P=5 bar, N_CH4=11, Loading=3.8778021978022 mg/g
+
+# ============ PRESSURE POINT 4: 10.0 bar ============
+variable        pressure equal 10.0
+variable        mu equal -7.83442
+
+print           "Pressure: ${pressure} bar, mu: ${mu} kcal/mol"
+Pressure: 10 bar, mu: -7.83442 kcal/mol
+
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 ${temp} ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 -7.83442 1.5                 mol ch4_mol maxangle 10 full_energy
+
+run             ${nequil}
+run             50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021150949
+  estimated relative force accuracy = 6.3695454e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_fix
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.26 | 18.46 | 19.18 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    475432   296.51174      504.89302      39649.077           3651   11           
+    480000   300.91098     -152.93463      39649.077           3654   14           
+    490000   298.38657     -116.50076      39649.077           3656   16           
+    500000   296.46116     -1368.0303      39649.077           3656   16           
+    510000   296.19372      266.33171      39649.077           3655   15           
+    520000   303.68096     -461.3904       39649.077           3660   20           
+    525432   295.43376     -314.22632      39649.077           3658   18           
+Loop time of 1170.41 on 40 procs for 50000 steps with 3658 atoms
+
+Performance: 3.691 ns/day, 6.502 hours/ns, 42.720 timesteps/s, 156.270 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 73.756     | 93.246     | 109.62     |  87.4 |  7.97
+Bond    | 11.82      | 14.985     | 17.39      |  35.7 |  1.28
+Kspace  | 60.149     | 78.462     | 101.22     | 107.2 |  6.70
+Neigh   | 21.59      | 21.664     | 21.744     |   1.3 |  1.85
+Comm    | 16.419     | 16.768     | 17.141     |   6.0 |  1.43
+Output  | 0.0005509  | 0.00056176 | 0.00075945 |   0.0 |  0.00
+Modify  | 943.54     | 943.64     | 943.73     |   0.1 | 80.63
+Other   |            | 1.636      |            |       |  0.14
+
+Nlocal:          91.45 ave         108 max          76 min
+Histogram: 1 4 0 7 9 7 7 4 0 1
+Nghost:        6893.25 ave        6967 max        6826 min
+Histogram: 3 4 6 2 8 2 6 2 4 3
+Neighs:        72315.7 ave       88929 max       56890 min
+Histogram: 3 2 3 10 7 2 1 7 4 1
+
+Total # of neighbors = 2892629
+Ave neighs/atom = 790.76791
+Ave special neighs/atom = 11.498086
+Neighbor list builds = 53500
+Dangerous builds = 0
+
+fix             stats all ave/time 500 50 50000 v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3                 file production_10.0bar.dat
+
+run             ${nprod}
+run             100000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021130702
+  estimated relative force accuracy = 6.3634481e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.32 | 18.54 | 19.24 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    525432   294.86826     -314.22632      39649.077           3658   18           
+    530000   298.32818      1902.7312      39649.077           3659   19           
+    540000   287.3114      -1193.234       39649.077           3654   14           
+    550000   300.17808     -152.57904      39649.077           3655   15           
+    560000   296.96267      381.70522      39649.077           3660   20           
+    570000   298.24703      17.719635      39649.077           3657   17           
+    580000   297.93778     -970.7751       39649.077           3657   17           
+    590000   295.71223      1598.791       39649.077           3656   16           
+    600000   300.11291     -918.95173      39649.077           3660   20           
+    610000   293.49951     -949.75507      39649.077           3658   18           
+    620000   296.73231      345.8646       39649.077           3656   16           
+    625432   302.32233     -300.58575      39649.077           3654   14           
+Loop time of 2376.68 on 40 procs for 100000 steps with 3654 atoms
+
+Performance: 3.635 ns/day, 6.602 hours/ns, 42.076 timesteps/s, 153.744 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 160.22     | 186.06     | 227.53     | 122.9 |  7.83
+Bond    | 25.621     | 29.87      | 37.748     |  48.2 |  1.26
+Kspace  | 114.9      | 164.18     | 193.08     | 145.9 |  6.91
+Neigh   | 43.908     | 44.041     | 44.166     |   1.7 |  1.85
+Comm    | 32.871     | 33.533     | 34.348     |   8.5 |  1.41
+Output  | 0.00095753 | 0.00098332 | 0.001232   |   0.0 |  0.00
+Modify  | 1915.5     | 1915.7     | 1915.9     |   0.1 | 80.60
+Other   |            | 3.276      |            |       |  0.14
+
+Nlocal:          91.35 ave         105 max          78 min
+Histogram: 3 4 4 6 2 7 2 5 3 4
+Nghost:        6866.02 ave        6937 max        6778 min
+Histogram: 3 0 1 5 7 6 7 5 4 2
+Neighs:        72143.8 ave       86323 max       53805 min
+Histogram: 1 0 4 5 8 6 6 2 4 4
+
+Total # of neighbors = 2885752
+Ave neighs/atom = 789.75151
+Ave special neighs/atom = 11.510673
+Neighbor list builds = 106993
+Dangerous builds = 0
+
+variable        final_n_ch4 equal v_n_ch4
+variable        final_loading_mg_g equal v_loading_mg_g
+variable        final_loading_mmol_g equal v_loading_mmol_g
+variable        final_density equal v_density_molec_A3
+print           "${pressure} ${final_n_ch4} ${final_loading_mg_g} ${final_loading_mmol_g} ${final_density} ${mu}" append isotherm_results.dat
+10 14 4.93538461538462 0.307692307692308 0.000353097752928112 -7.83442
+
+unfix           gcmc_fix
+unfix           stats
+print           "Completed: P=${pressure} bar, N_CH4=${final_n_ch4}, Loading=${final_loading_mg_g} mg/g"
+Completed: P=10 bar, N_CH4=14, Loading=4.93538461538462 mg/g
+
+# ============ PRESSURE POINT 5: 20.0 bar ============
+variable        pressure equal 20.0
+variable        mu equal -7.45428
+
+print           "Pressure: ${pressure} bar, mu: ${mu} kcal/mol"
+Pressure: 20 bar, mu: -7.45428 kcal/mol
+
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 ${temp} ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 -7.45428 1.5                 mol ch4_mol maxangle 10 full_energy
+
+run             ${nequil}
+run             50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021142264
+  estimated relative force accuracy = 6.3669302e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_fix
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.26 | 18.56 | 19.18 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    625432   302.65337     -300.58575      39649.077           3654   14           
+    630000   299.45522      925.12268      39649.077           3659   19           
+    640000   296.75354     -1703.4882      39649.077           3659   19           
+    650000   293.07823     -1089.2574      39649.077           3663   23           
+    660000   293.95607     -2007.2356      39649.077           3665   25           
+    670000   296.22231     -1946.6279      39649.077           3663   23           
+    675432   301.29859     -90.670433      39649.077           3659   19           
+Loop time of 1173.25 on 40 procs for 50000 steps with 3659 atoms
+
+Performance: 3.682 ns/day, 6.518 hours/ns, 42.617 timesteps/s, 155.935 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 77.41      | 93.273     | 108.68     |  83.8 |  7.95
+Bond    | 11.98      | 14.952     | 18.02      |  32.2 |  1.27
+Kspace  | 60.808     | 78.987     | 97.83      |  99.8 |  6.73
+Neigh   | 21.628     | 21.69      | 21.75      |   1.1 |  1.85
+Comm    | 16.306     | 16.664     | 17.02      |   5.3 |  1.42
+Output  | 0.00051499 | 0.00052696 | 0.0007261  |   0.0 |  0.00
+Modify  | 946        | 946.05     | 946.11     |   0.1 | 80.63
+Other   |            | 1.632      |            |       |  0.14
+
+Nlocal:         91.475 ave         106 max          77 min
+Histogram: 2 3 5 2 6 7 7 5 1 2
+Nghost:        6907.98 ave        6977 max        6861 min
+Histogram: 3 1 9 9 6 7 2 0 2 1
+Neighs:        72371.5 ave       88875 max       62482 min
+Histogram: 7 8 5 3 3 0 6 6 1 1
+
+Total # of neighbors = 2894861
+Ave neighs/atom = 791.16179
+Ave special neighs/atom = 11.494944
+Neighbor list builds = 53498
+Dangerous builds = 0
+
+fix             stats all ave/time 500 50 50000 v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3                 file production_20.0bar.dat
+
+run             ${nprod}
+run             100000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021127814
+  estimated relative force accuracy = 6.3625785e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.32 | 18.64 | 19.24 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    675432   300.88676     -90.670433      39649.077           3659   19           
+    680000   298.08418     -1888.8332      39649.077           3663   23           
+    690000   299.7291      -1062.752       39649.077           3662   22           
+    700000   290.70441     -394.76334      39649.077           3662   22           
+    710000   301.68701      300.51061      39649.077           3660   20           
+    720000   296.33769      829.10517      39649.077           3663   23           
+    730000   302.28039      473.25098      39649.077           3666   26           
+    740000   299.59774     -1372.4263      39649.077           3664   24           
+    750000   299.37112     -1596.9156      39649.077           3667   27           
+    760000   301.02473      10.297049      39649.077           3664   24           
+    770000   306.62719      852.86875      39649.077           3665   25           
+    775432   297.08058     -1734.4887      39649.077           3664   24           
+Loop time of 2346.39 on 40 procs for 100000 steps with 3664 atoms
+
+Performance: 3.682 ns/day, 6.518 hours/ns, 42.619 timesteps/s, 156.154 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 152.37     | 185.96     | 208.88     | 105.7 |  7.93
+Bond    | 23.305     | 29.774     | 35.562     |  55.5 |  1.27
+Kspace  | 130.49     | 156.72     | 196.13     | 128.1 |  6.68
+Neigh   | 43.535     | 43.56      | 43.581     |   0.2 |  1.86
+Comm    | 32.859     | 33.222     | 33.858     |   3.5 |  1.42
+Output  | 0.00094293 | 0.00097222 | 0.0011889  |   0.0 |  0.00
+Modify  | 1893.8     | 1893.9     | 1894       |   0.1 | 80.71
+Other   |            | 3.302      |            |       |  0.14
+
+Nlocal:           91.6 ave         104 max          72 min
+Histogram: 1 0 3 2 3 8 7 11 4 1
+Nghost:        6858.48 ave        6908 max        6790 min
+Histogram: 1 3 2 3 3 9 6 6 3 4
+Neighs:        72549.9 ave       87909 max       56323 min
+Histogram: 1 3 6 2 7 6 5 6 2 2
+
+Total # of neighbors = 2901995
+Ave neighs/atom = 792.0292
+Ave special neighs/atom = 11.479258
+Neighbor list builds = 106999
+Dangerous builds = 0
+
+variable        final_n_ch4 equal v_n_ch4
+variable        final_loading_mg_g equal v_loading_mg_g
+variable        final_loading_mmol_g equal v_loading_mmol_g
+variable        final_density equal v_density_molec_A3
+print           "${pressure} ${final_n_ch4} ${final_loading_mg_g} ${final_loading_mmol_g} ${final_density} ${mu}" append isotherm_results.dat
+20 24 8.46065934065934 0.527472527472527 0.00060531043359105 -7.45428
+
+unfix           gcmc_fix
+unfix           stats
+print           "Completed: P=${pressure} bar, N_CH4=${final_n_ch4}, Loading=${final_loading_mg_g} mg/g"
+Completed: P=20 bar, N_CH4=24, Loading=8.46065934065934 mg/g
+
+# ============ PRESSURE POINT 6: 40.0 bar ============
+variable        pressure equal 40.0
+variable        mu equal -7.06414
+
+print           "Pressure: ${pressure} bar, mu: ${mu} kcal/mol"
+Pressure: 40 bar, mu: -7.06414 kcal/mol
+
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 ${temp} ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 ${mu} 1.5                 mol ch4_mol maxangle 10 full_energy
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 298.15 -7.06414 1.5                 mol ch4_mol maxangle 10 full_energy
+
+run             ${nequil}
+run             50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021113394
+  estimated relative force accuracy = 6.3582358e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_fix
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.26 | 18.62 | 19.18 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    775432   296.67506     -1734.4887      39649.077           3664   24           
+    780000   295.05279     -1211.6111      39649.077           3668   28           
+    790000   301.93675     -416.65289      39649.077           3665   25           
+    800000   300.09795     -1043.8461      39649.077           3670   30           
+    810000   295.29764     -73.705671      39649.077           3675   35           
+    820000   296.40086     -908.04726      39649.077           3666   26           
+    825432   300.10691      240.69178      39649.077           3666   26           
+Loop time of 1174.99 on 40 procs for 50000 steps with 3666 atoms
+
+Performance: 3.677 ns/day, 6.528 hours/ns, 42.553 timesteps/s, 156.001 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 75.842     | 93.295     | 114.52     |  79.7 |  7.94
+Bond    | 10.228     | 14.933     | 19.337     |  45.3 |  1.27
+Kspace  | 53.051     | 78.561     | 100.75     |  99.9 |  6.69
+Neigh   | 21.764     | 21.821     | 21.868     |   0.9 |  1.86
+Comm    | 16.422     | 16.693     | 17.013     |   4.6 |  1.42
+Output  | 0.00053141 | 0.00054643 | 0.00075243 |   0.0 |  0.00
+Modify  | 947.97     | 948.05     | 948.13     |   0.1 | 80.69
+Other   |            | 1.64       |            |       |  0.14
+
+Nlocal:          91.65 ave         102 max          74 min
+Histogram: 1 0 2 5 1 9 5 5 7 5
+Nghost:        6899.98 ave        6955 max        6836 min
+Histogram: 1 1 4 6 3 8 9 4 2 2
+Neighs:        72645.8 ave       88941 max       54328 min
+Histogram: 1 0 4 7 8 6 3 7 2 2
+
+Total # of neighbors = 2905831
+Ave neighs/atom = 792.64348
+Ave special neighs/atom = 11.472995
+Neighbor list builds = 53502
+Dangerous builds = 0
+
+fix             stats all ave/time 500 50 50000 v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3                 file production_40.0bar.dat
+
+run             ${nprod}
+run             100000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17470756
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021107634
+  estimated relative force accuracy = 6.3565012e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 210 of 210 mixed pair_coeff terms from sixthpower/geometric mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_fix
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 18.32 | 18.68 | 19.24 Mbytes
+   Step          Temp          Press          Volume        Atoms       v_n_ch4    
+    825432   299.94314      240.69178      39649.077           3666   26           
+    830000   298.46022      552.90113      39649.077           3663   23           
+    840000   297.50001     -7.219251       39649.077           3671   31           
+    850000   300.7873      -794.12186      39649.077           3672   32           
+    860000   300.12014     -379.99372      39649.077           3669   29           
+    870000   302.13108      1136.0946      39649.077           3671   31           
+    880000   301.02515     -3158.6091      39649.077           3666   26           
+    890000   304.31217     -387.34724      39649.077           3671   31           
+    900000   295.37747      1166.5474      39649.077           3676   36           
+    910000   304.13675     -1973.2708      39649.077           3666   26           
+    920000   291.52571      739.00589      39649.077           3667   27           
+    925432   300.00222      919.78695      39649.077           3669   29           
+Loop time of 2399.44 on 40 procs for 100000 steps with 3669 atoms
+
+Performance: 3.601 ns/day, 6.665 hours/ns, 41.676 timesteps/s, 152.911 katom-step/s
+98.5% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 157.92     | 187.49     | 232.47     | 134.2 |  7.81
+Bond    | 22.279     | 29.918     | 39.463     |  60.7 |  1.25
+Kspace  | 112.22     | 166.79     | 203.89     | 161.8 |  6.95
+Neigh   | 44.222     | 44.335     | 44.436     |   1.2 |  1.85
+Comm    | 33.015     | 33.589     | 34.259     |   5.8 |  1.40
+Output  | 0.00094939 | 0.00097514 | 0.001211   |   0.0 |  0.00
+Modify  | 1933.9     | 1934       | 1934.1     |   0.1 | 80.60
+Other   |            | 3.314      |            |       |  0.14
+
+Nlocal:         91.725 ave         107 max          74 min
+Histogram: 2 2 1 5 6 7 9 3 2 3
+Nghost:        6886.57 ave        6964 max        6829 min
+Histogram: 2 4 7 7 7 4 4 2 2 1
+Neighs:          72735 ave       91030 max       53346 min
+Histogram: 1 0 5 8 7 7 4 4 1 3
+
+Total # of neighbors = 2909401
+Ave neighs/atom = 792.96838
+Ave special neighs/atom = 11.463614
+Neighbor list builds = 106971
+Dangerous builds = 0
+
+variable        final_n_ch4 equal v_n_ch4
+variable        final_loading_mg_g equal v_loading_mg_g
+variable        final_loading_mmol_g equal v_loading_mmol_g
+variable        final_density equal v_density_molec_A3
+print           "${pressure} ${final_n_ch4} ${final_loading_mg_g} ${final_loading_mmol_g} ${final_density} ${mu}" append isotherm_results.dat
+40 29 10.2232967032967 0.637362637362637 0.000731416773922519 -7.06414
+
+unfix           gcmc_fix
+unfix           stats
+print           "Completed: P=${pressure} bar, N_CH4=${final_n_ch4}, Loading=${final_loading_mg_g} mg/g"
+Completed: P=40 bar, N_CH4=29, Loading=10.2232967032967 mg/g
+
+# ============ COMPLETION ============
+print           ""
+
+print           "===== SIMULATION COMPLETE ====="
+===== SIMULATION COMPLETE =====
+print           "Results in: isotherm_results.dat"
+Results in: isotherm_results.dat
+print           "Individual data: production_*bar.dat"
+Individual data: production_*bar.dat
+print           "==============================="
+===============================
+Total wall time: 5:56:37

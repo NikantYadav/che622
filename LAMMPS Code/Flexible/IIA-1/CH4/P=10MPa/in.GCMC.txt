@@ -1,0 +1,123 @@
+echo			both
+dimension        3
+boundary	   p p p
+units          real
+atom_style     full
+timestep        1.0             # Timestep/fs
+neighbor		         2.0        bin
+neigh_modify		    delay 0     every 1     check yes 
+
+##########################################
+############ GCMC setting #############
+##########################################
+
+variable        mu              equal      -7.719
+variable        atm2MPa         equal      0.101325
+variable        press           equal      10/${atm2MPa}
+variable        temp            equal      363.15  
+variable        GCMCNevery      equal      1000
+variable        GCMCexchange    equal      500
+variable        GCMCmove        equal      0
+variable	    disp            equal      0.8
+variable        Tdamp           equal      100*dt
+variable        Pdamp           equal      1000*dt
+   
+##########################################
+############ General setting #############
+##########################################
+
+variable        seed            equal     649345
+variable        rcut            equal     14           # Radius cutoff/A
+variable        kspace          equal     0.0001
+variable        dump            equal     100000
+variable        thermo          equal     500
+
+##########################################
+##########################################
+
+pair_style          lj/cut/coul/long     ${rcut}                #cutoff lj = cutoff coulomb       
+pair_modify         mix                 arithmetic             #Lorentz–Berthelot combining rules     
+pair_modify         tail                no            
+kspace_style        pppm                ${kspace}                     
+bond_style          harmonic
+angle_style         harmonic
+dihedral_style      harmonic
+improper_style      cvff
+
+read_data              IIA-1.data     &  
+extra/atom/types  1                  
+
+
+variable        CH4type        equal       19
+
+
+region regionGCMC  block  EDGE  EDGE  EDGE  EDGE    EDGE  EDGE 
+create_atoms   ${CH4type}   random  5 ${seed}  regionGCMC    overlap  2
+
+pair_coeff     19  19    0.294   3.73       # CH4   CH4  
+mass           19     16.04                   # CH4 mass 
+
+
+group          kerogen                type     1:18                 
+group          CH4                     type     ${CH4type}   
+
+compute TempCH4 CH4 temp
+compute_modify TempCH4 dynamic/dof yes
+
+
+dump               1    all     custom    ${dump}    kerogen.xyz   type id x y z element
+dump_modify        1    element  C C C C H O C C N C H O O H S N C S  CH4
+
+#-------------------------------------------------------------------------------
+# run_style verlet    
+# Nose/Hoover temperature thermostat and Nose/Hoover pressure barostat
+#-------------------------------------------------------------------------------
+
+run_style      verlet               # The verlet style is a standard velocity-Verlet integrator.
+
+velocity       all    create   ${temp}      ${seed}   dist   gaussian   
+
+
+variable 	CH4count atom "type==v_CH4type"
+group 		CH4count dynamic CH4 var CH4count
+variable    NumCH4 equal count(CH4count)
+
+
+
+fix             nvtCH4 CH4 nvt temp ${temp} ${temp}    ${Tdamp} 
+compute_modify 	nvtCH4_temp  dynamic/dof yes
+
+fix          kerogenNPT kerogen  npt temp ${temp} ${temp}  ${Tdamp}  aniso ${press} ${press} ${Pdamp} 
+
+
+
+fix     gcmcCH4    CH4    gcmc    ${GCMCNevery}    ${GCMCexchange}   ${GCMCmove}   ${CH4type}     ${seed}  &
+ ${temp}   ${mu}   ${disp}    tfac_insert   1      full_energy
+
+
+compute_modify thermo_temp dynamic/dof yes
+
+fix            121    all   ave/time     100     100    10000      c_TempCH4       v_NumCH4      mode scalar      file      Output-GCMC-before-equilibrium-T=${temp}-mu=${mu}.txt  
+
+
+variable	iacc equal f_gcmcCH4[4]/(f_gcmcCH4[3]+0.1)
+variable	dacc equal f_gcmcCH4[6]/(f_gcmcCH4[5]+0.1)
+
+thermo_style     custom    step     lx ly lz vol  pxx pyy pzz press  temp   c_TempCH4   v_NumCH4   v_iacc  v_dacc     pe   ke   
+thermo ${thermo}
+
+restart         1000000 kerogen.restart1  kerogen.restart2
+
+
+run   15000000              
+
+
+fix          GCMC5    all   ave/time    200     500    100000        c_TempCH4       v_NumCH4      file   Output-GCMC-after-equilibrium-${temp}-${mu}.txt
+
+run   5000000              
+
+write_data           GCMC1-kerogen-${temp}-${mu}.data
+
+
+ 
+

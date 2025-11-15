@@ -1,0 +1,4 @@
+# Time-averaged data for fix stats
+# TimeStep v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3
+400000 10.76 3.7932 0.236484 0.000271381
+450000 8.26 2.91188 0.181538 0.000208328
