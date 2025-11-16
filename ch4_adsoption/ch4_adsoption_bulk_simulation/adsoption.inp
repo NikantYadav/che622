@@ -10,7 +10,6 @@ atom_style      full
 boundary        p p p
 
 # ============ DEFINE ALL FORCE FIELD STYLES FIRST ============
-# Required before read_data when data file contains coefficients
 pair_style      lj/class2/coul/long 14.0
 pair_modify     mix geometric tail yes
 bond_style      class2

@@ -1,0 +1,122 @@
+# =============================================================================
+# LAMMPS Script for CH4 Adsorption - Pressure Point 1
+# Pressure: 90.0 bar, Chemical Potential: 11.32 kcal/mol
+# Coal: PCFF force field (20 atom types) + CH4: TraPPE-UA (type 21)
+# =============================================================================
+
+# ============ INITIALIZATION ============
+units           real
+atom_style      full
+boundary        p p p
+
+# ============ DEFINE ALL FORCE FIELD STYLES FIRST ============
+pair_style      lj/class2/coul/long 14.0
+pair_modify     mix geometric tail yes
+bond_style      class2
+angle_style     class2  
+dihedral_style  class2
+improper_style  class2
+kspace_style    pppm 1.0e-5
+
+# ============ READ DATA WITH EXTRA ATOM TYPE ============
+read_data       coal_structure.data extra/atom/types 1
+
+# ============ DEFINE MASSES ============
+mass            21 16.04    # CH4 molecular weight (TraPPE-UA)
+
+# ============ ADDITIONAL PAIR COEFFICIENTS ============
+pair_coeff      21 21 0.294106 3.73   # CH4-CH4: TraPPE-UA parameters
+
+# ============ NEIGHBOR SETTINGS ============
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+# ============ GROUPS ============
+group           coal type 1:20
+group           methane type 21
+
+# ============ SYSTEM PROPERTIES ============
+variable        vol equal vol
+variable        temp equal 313.15
+variable        pressure equal 90.0
+variable        mu equal 11.32
+
+print           "System volume: ${vol} A^3"
+print           "Coal atoms: $(count(coal))"
+print           "Pressure: ${pressure} bar"
+print           "Chemical potential: ${mu} kcal/mol"
+
+# ============ INITIAL SETUP ============
+reset_timestep  0
+
+# ============ MINIMIZATION ============
+minimize        1.0e-6 1.0e-4 5000 50000
+
+# ============ INITIAL EQUILIBRATION ============
+velocity        coal create ${temp} 12345
+fix             nvt_equil coal nvt temp ${temp} ${temp} 100.0
+timestep        1.0
+run             25000
+unfix           nvt_equil
+
+# ============ GCMC SETUP ============
+molecule        ch4_mol ch4_molecule.txt
+
+# Thermostat for all atoms during GCMC
+fix             nvt_gcmc all nvt temp ${temp} ${temp} 100.0
+
+# Constants and variables
+variable        total_coal_mass equal 28603.9    # Approximate mass in mg
+variable        n_ch4 equal count(methane)
+variable        ch4_mw equal 16.04
+variable        loading_mg_g equal v_n_ch4*${ch4_mw}*1000/v_total_coal_mass
+variable        loading_mmol_g equal v_n_ch4*1000/v_total_coal_mass
+variable        density_molec_A3 equal v_n_ch4/v_vol
+
+# ============ GCMC SIMULATION - P = 0.5 bar ============
+print           "Starting GCMC simulation at ${pressure} bar, mu=${mu} kcal/mol"
+
+fix             gcmc_fix methane gcmc 50 50 0 0 54321 ${temp} ${mu} 1.5 &
+                mol ch4_mol maxangle 10 full_energy
+
+# Equilibration
+variable        nequil equal 25000
+thermo          5000
+thermo_style    custom step temp press vol v_pressure atoms
+print           "Equilibration phase: ${nequil} steps"
+run             ${nequil}
+
+# Production run
+variable        nprod equal 75000
+fix             stats all ave/time 500 50 50000 v_n_ch4 v_loading_mg_g v_loading_mmol_g v_density_molec_A3 &
+                file production_90.0bar.dat
+
+thermo          10000
+thermo_style    custom step temp press vol atoms v_n_ch4 v_loading_mg_g
+print           "Production phase: ${nprod} steps"
+run             ${nprod}
+
+# ============ OUTPUT RESULTS ============
+variable        final_n_ch4 equal v_n_ch4
+variable        final_loading_mg_g equal v_loading_mg_g
+variable        final_loading_mmol_g equal v_loading_mmol_g
+variable        final_density equal v_density_molec_A3
+
+# Output file header (create on first run or append)
+print           "# Pressure(bar) N_CH4 Loading(mg/g) Loading(mmol/g) Density(molec/A^3) Chemical_Potential(kcal/mol)" file isotherm_P90.0bar.dat
+print           "${pressure} ${final_n_ch4} ${final_loading_mg_g} ${final_loading_mmol_g} ${final_density} ${mu}" append isotherm_P90.0bar.dat
+
+# Clean up
+unfix           gcmc_fix
+unfix           stats
+unfix           nvt_gcmc
+
+# ============ COMPLETION ============
+print           ""
+print           "===== SIMULATION COMPLETE FOR P=90.0 bar ====="
+print           "N_CH4: ${final_n_ch4}"
+print           "Loading: ${final_loading_mg_g} mg/g (${final_loading_mmol_g} mmol/g)"
+print           "Density: ${final_density} molec/A^3"
+print           "Results saved to: isotherm_P90.0bar.dat"
+print           "Production data: production_90.0bar.dat"
+print           "==============================="
