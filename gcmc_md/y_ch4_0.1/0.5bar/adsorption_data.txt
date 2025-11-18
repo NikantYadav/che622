@@ -1,0 +1,6 @@
+# Time-averaged data for fix avg_out
+# TimeStep v_n_ch4 v_n_co2 v_selectivity v_strain c_TempCO2
+400000 0 0 0 -7.49091e-18 321.989
+500000 0 0 0 7.76281e-17 335.326
+600000 0 0 0 -5.73772e-18 326.724
+700000 0 0 0 3.52929e-17 320.801

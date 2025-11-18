@@ -1,0 +1,446 @@
+LAMMPS (22 Jul 2025 - Update 1)
+units real
+atom_style full
+boundary p p p
+
+pair_style lj/class2/coul/long 14.0
+pair_modify mix arithmetic tail yes
+bond_style class2
+angle_style class2
+dihedral_style class2
+improper_style class2
+kspace_style pppm 1e-5
+
+# Read data with extra allocations for GCMC molecules
+read_data coal_relaxed.data extra/atom/types 3 extra/bond/types 1 extra/angle/types 1 extra/bond/per/atom 2 extra/angle/per/atom 1 extra/special/per/atom 2
+Reading data file ...
+  orthogonal box = (-18.350036 -24.206188 -9.1556953) to (16.531016 13.97878 20.528354)
+  4 by 5 by 2 MPI processor grid
+  reading atoms ...
+  3640 atoms
+  reading velocities ...
+  3640 velocities
+  scanning bonds ...
+  6 = max bonds/atom
+  scanning angles ...
+  7 = max angles/atom
+  scanning dihedrals ...
+  21 = max dihedrals/atom
+  scanning impropers ...
+  4 = max impropers/atom
+  orthogonal box = (-18.350036 -24.206188 -9.1556953) to (16.531016 13.97878 20.528354)
+  4 by 5 by 2 MPI processor grid
+  reading bonds ...
+  4020 bonds
+  reading angles ...
+  7100 angles
+  reading dihedrals ...
+  11170 dihedrals
+  reading impropers ...
+  3110 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     4 = max # of 1-2 neighbors
+     9 = max # of 1-3 neighbors
+    24 = max # of 1-4 neighbors
+    29 = max # of special neighbors
+  special bonds CPU = 0.003 seconds
+  read_data CPU = 0.397 seconds
+
+# Define molecule templates with type offsets
+# Assuming coal uses types 1-20, bonds 1-34, angles 1-72
+molecule ch4_mol molecule_ch4.dat toff 20
+Read molecule template ch4_mol:
+# CH4 molecule template (TraPPE united atom)
+  1 molecules
+  0 fragments
+  0 bodies
+  1 atoms with max type 21
+  0 bonds with max type 0
+  0 angles with max type 0
+  0 dihedrals with max type 0
+  0 impropers with max type 0
+molecule co2_mol molecule_co2.dat toff 20 boff 34 aoff 72
+Read molecule template co2_mol:
+# CO2 molecule template (TraPPE)
+  1 molecules
+  0 fragments
+  0 bodies
+  3 atoms with max type 22
+  2 bonds with max type 35
+  1 angles with max type 73
+  0 dihedrals with max type 0
+  0 impropers with max type 0
+
+# Mass definitions (types 21, 22, 23 after offset)
+mass 21 16.04     # CH4
+mass 22 12.01     # C in CO2
+mass 23 15.999    # O in CO2
+
+# Pair coefficients
+pair_coeff 21 21 0.294106 3.73
+pair_coeff 22 22 0.053655 2.80
+pair_coeff 23 23 0.156989 3.05
+pair_coeff 21 22 0.125619 3.2650
+pair_coeff 21 23 0.214875 3.3900
+pair_coeff 22 23 0.091778 2.9250
+
+# Bond and angle coefficients (types 35 and 73 after offset)
+bond_coeff 35 1.16 1250.0 0.0 0.0
+angle_coeff 73 180.0 160.0 0.0 0.0
+angle_coeff 73 bb 0.0 1.16 1.16
+angle_coeff 73 ba 0.0 0.0 1.16 1.16
+
+# Groups
+group coal type 1:20
+3640 atoms in group coal
+group ch4 type 21
+0 atoms in group ch4
+group co2 type 22:23
+0 atoms in group co2
+
+# Define atom-style variables
+variable is_ch4 atom "type==21"
+variable is_co2_C atom "type==22"     # CO2 carbon
+variable is_co2_O atom "type==23"     # CO2 oxygen
+
+# Create dynamic groups (use gases as parent, not "all")
+group ch4_atoms dynamic ch4 var is_ch4
+dynamic group ch4_atoms defined
+group co2_C_atoms dynamic co2 var is_co2_C
+dynamic group co2_C_atoms defined
+group co2_O_atoms dynamic co2 var is_co2_O
+dynamic group co2_O_atoms defined
+
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+timestep 1.0
+
+variable temp equal 313.15
+variable press equal 9.87
+variable phi_ch4 equal 0.99195
+variable phi_co2 equal 0.95374
+variable Tdamp equal 100.0
+variable Pdamp equal 1000.0
+
+# Compute for CO2 temperature
+compute TempCO2 co2 temp
+compute_modify TempCO2 dynamic/dof yes
+
+# --- STAGE 1: INITIAL EQUILIBRATION ---
+fix nvt_coal coal nvt temp ${temp} ${temp} ${Tdamp}
+fix nvt_coal coal nvt temp 313.15 ${temp} ${Tdamp}
+fix nvt_coal coal nvt temp 313.15 313.15 ${Tdamp}
+fix nvt_coal coal nvt temp 313.15 313.15 100
+run 50000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17482899
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021037117
+  estimated relative force accuracy = 6.3352653e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 250 of 253 mixed pair_coeff terms from sixthpower/arithmetic mixing rule
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 16
+  ghost atom cutoff = 16
+  binsize = 8, bins = 5 5 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/class2/coul/long, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 18.88 | 18.88 | 18.89 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   306.78064     -2362.8626      21241.033      22205.871     -2431.9881    
+     50000   307.74754     -2389.6413      21276.923      22225.471     -1434.5195    
+Loop time of 224.353 on 40 procs for 50000 steps with 3640 atoms
+
+Performance: 19.255 ns/day, 1.246 hours/ns, 222.863 timesteps/s, 811.220 katom-step/s
+97.4% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 114.84     | 133.71     | 165.14     | 102.1 | 59.60
+Bond    | 11.569     | 15.108     | 19.152     |  51.0 |  6.73
+Kspace  | 13.614     | 48.241     | 68.491     | 188.3 | 21.50
+Neigh   | 7.0154     | 7.0277     | 7.0372     |   0.2 |  3.13
+Comm    | 10.121     | 10.31      | 10.482     |   3.1 |  4.60
+Output  | 5.4214e-05 | 5.5969e-05 | 8.6865e-05 |   0.0 |  0.00
+Modify  | 8.6405     | 8.7117     | 8.7731     |   1.1 |  3.88
+Other   |            | 1.242      |            |       |  0.55
+
+Nlocal:             91 ave         110 max          78 min
+Histogram: 3 5 6 8 7 4 2 0 4 1
+Nghost:        6870.65 ave        6935 max        6808 min
+Histogram: 4 2 4 3 7 5 7 4 3 1
+Neighs:        71806.4 ave       91563 max       58544 min
+Histogram: 1 6 7 11 3 5 2 3 0 2
+
+Total # of neighbors = 2872257
+Ave neighs/atom = 789.08159
+Ave special neighs/atom = 11.554945
+Neighbor list builds = 2081
+Dangerous builds = 0
+
+variable V0 equal vol
+print "Initial system volume (V0): ${V0}"
+Initial system volume (V0): 39537.1320650039
+
+unfix nvt_coal
+
+# --- STAGE 2: GCMC/MD SIMULATION ---
+print "Starting Hybrid GCMC/MD Simulation..."
+Starting Hybrid GCMC/MD Simulation...
+
+# Rigid body dynamics for CO2 molecules
+fix rigid_co2 co2 rigid/nvt/small molecule temp ${temp} ${temp} ${Tdamp} mol co2_mol
+fix rigid_co2 co2 rigid/nvt/small molecule temp 313.15 ${temp} ${Tdamp} mol co2_mol
+fix rigid_co2 co2 rigid/nvt/small molecule temp 313.15 313.15 ${Tdamp} mol co2_mol
+fix rigid_co2 co2 rigid/nvt/small molecule temp 313.15 313.15 100 mol co2_mol
+Fix rigid/nvt/small setup ...
+  create bodies CPU = 0.001 seconds
+  0 rigid bodies with 0 atoms
+  1.16 = max distance from body owner to body atom
+fix_modify rigid_co2 dynamic/dof yes
+
+# NPT for entire system
+fix npt_all all npt temp ${temp} ${temp} ${Tdamp} aniso ${press} ${press} ${Pdamp}
+fix npt_all all npt temp 313.15 ${temp} ${Tdamp} aniso ${press} ${press} ${Pdamp}
+fix npt_all all npt temp 313.15 313.15 ${Tdamp} aniso ${press} ${press} ${Pdamp}
+fix npt_all all npt temp 313.15 313.15 100 aniso ${press} ${press} ${Pdamp}
+fix npt_all all npt temp 313.15 313.15 100 aniso 9.87 ${press} ${Pdamp}
+fix npt_all all npt temp 313.15 313.15 100 aniso 9.87 9.87 ${Pdamp}
+fix npt_all all npt temp 313.15 313.15 100 aniso 9.87 9.87 1000
+
+# GCMC for CH4 (no rigid constraint needed)
+fix gcmc_ch4 ch4 gcmc 1000 1000 0 0 54321 ${temp} 0.0 0.0 mol ch4_mol pressure ${press} fugacity_coeff ${phi_ch4} group ch4 tfac_insert 1.0 full_energy
+fix gcmc_ch4 ch4 gcmc 1000 1000 0 0 54321 313.15 0.0 0.0 mol ch4_mol pressure ${press} fugacity_coeff ${phi_ch4} group ch4 tfac_insert 1.0 full_energy
+fix gcmc_ch4 ch4 gcmc 1000 1000 0 0 54321 313.15 0.0 0.0 mol ch4_mol pressure 9.87 fugacity_coeff ${phi_ch4} group ch4 tfac_insert 1.0 full_energy
+fix gcmc_ch4 ch4 gcmc 1000 1000 0 0 54321 313.15 0.0 0.0 mol ch4_mol pressure 9.87 fugacity_coeff 0.99195 group ch4 tfac_insert 1.0 full_energy
+
+# GCMC for CO2 (with rigid constraint)
+fix gcmc_co2 co2 gcmc 1000 1000 0 0 12345 ${temp} 0.0 0.0 mol co2_mol pressure ${press} fugacity_coeff ${phi_co2} group co2 rigid rigid_co2 tfac_insert 1.0 full_energy
+fix gcmc_co2 co2 gcmc 1000 1000 0 0 12345 313.15 0.0 0.0 mol co2_mol pressure ${press} fugacity_coeff ${phi_co2} group co2 rigid rigid_co2 tfac_insert 1.0 full_energy
+fix gcmc_co2 co2 gcmc 1000 1000 0 0 12345 313.15 0.0 0.0 mol co2_mol pressure 9.87 fugacity_coeff ${phi_co2} group co2 rigid rigid_co2 tfac_insert 1.0 full_energy
+fix gcmc_co2 co2 gcmc 1000 1000 0 0 12345 313.15 0.0 0.0 mol co2_mol pressure 9.87 fugacity_coeff 0.95374 group co2 rigid rigid_co2 tfac_insert 1.0 full_energy
+
+# Modify thermo compute for dynamic DOF
+compute_modify thermo_temp dynamic/dof yes
+
+# Variables for analysis
+variable strain equal (vol - v_V0) / v_V0
+
+variable nCH4_atoms equal count(ch4_atoms)
+variable nCO2_C equal count(co2_C_atoms)
+variable nCO2_O equal count(co2_O_atoms)
+
+
+# Calculate number of molecules
+variable n_ch4 equal v_nCH4_atoms        # CH4 is 1 atom per molecule
+variable n_co2 equal (v_nCO2_C+v_nCO2_O)/3.0   # CO2 is 3 atoms per molecule
+
+# Selectivity (with safety for division by zero)
+variable n_ch4_safe equal "v_n_ch4 + 0.001"
+variable selectivity equal v_n_co2/v_n_ch4_safe
+
+
+# GCMC acceptance ratios
+variable iacc_ch4 equal f_gcmc_ch4[4]/(f_gcmc_ch4[3]+0.1)
+variable dacc_ch4 equal f_gcmc_ch4[6]/(f_gcmc_ch4[5]+0.1)
+variable iacc_co2 equal f_gcmc_co2[4]/(f_gcmc_co2[3]+0.1)
+variable dacc_co2 equal f_gcmc_co2[6]/(f_gcmc_co2[5]+0.1)
+
+thermo_style custom step temp press vol v_strain density atoms c_TempCO2 v_n_ch4 v_n_co2 v_iacc_ch4 v_dacc_ch4 v_iacc_co2 v_dacc_co2 pe ke
+thermo 10000
+
+dump 1 all custom 50000 dump.gcmc.lammpstrj id type x y z
+
+# Equilibration run
+run 100000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.17482899
+  grid = 10 12 9
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0021037117
+  estimated relative force accuracy = 6.3352653e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 45
+Generated 250 of 253 mixed pair_coeff terms from sixthpower/arithmetic mixing rule
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_ch4
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_ch4
+0 atoms in group FixGCMC:gcmc_exclusion_group:gcmc_co2
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_co2
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 22.3 | 22.34 | 22.7 Mbytes
+   Step          Temp          Press          Volume        v_strain       Density        Atoms      c_TempCO2       v_n_ch4        v_n_co2       v_iacc_ch4     v_dacc_ch4     v_iacc_co2     v_dacc_co2       PotEng         KinEng    
+     50000   307.74754     -1434.5195      39537.132      1.1041708e-15  1.2013855           3640   0              0              0              0              0              0              0              18887.282      3338.1893    
+     60000   314.48923      1138.0292      38909.096      5.6099666e-16  1.2385652           3669   283.42723      11             4              0.0052502979   0.002971415    0.0021824964   0.0010080442   18728.949      3431.0036    
+     70000   313.42031     -1739.6173      39141.613      0              1.234268            3674   230.9476       13             4.6666667      0.0040067714   0.0026953909   0.0016979455   0.0010011914   18740.018      3422.7675    
+     80000   307.964        410.16744      39366.807     -1.8482468e-16  1.2312637           3681   350.99374      14             6              0.0041168385   0.0032128299   0.0014650941   0.00086758631  18744.806      3367.1586    
+     90000   308.18417      1275.8647      38863.049     -5.6166135e-16  1.2537295           3692   317.47605      16             8              0.0039941885   0.0032046307   0.0015050343   0.0008969906   18617.717      3375.9964    
+    100000   315.20394     -901.90342      39473.188     -9.2163289e-16  1.2353611           3694   319.47004      15             8.6666667      0.0036813105   0.0030788793   0.0013192559   0.00080044505  18620.897      3453.5207    
+    110000   308.65392      1139.3456      39378.148      1.1086287e-15  1.2386791           3695   397.50617      13             9.3333333      0.0033444704   0.0028903558   0.0011666628   0.00069999767  18666.34       3381.449     
+    120000   303.54219     -994.82241      39391.192     -1.8471027e-16  1.2406338           3699   253.91589      14             10             0.0031801422   0.0027638399   0.0010580165   0.00062804925  18688.617      3327.8603    
+    130000   311.47964      1900.3726      39139.379     -9.2949323e-16  1.2496349           3701   367.43236      13             10.666667      0.003158916    0.0028170348   0.00099984752  0.00060008851  18735.14       3415.5009    
+    140000   308.6167      -422.12609      39357.989     -7.3946437e-16  1.2440474           3703   331.23954      15             10.666667      0.003096934    0.0027484036   0.00093275088  0.00057813622  18695.643      3385.9475    
+    150000   312.97503     -2063.5012      39571.334      5.5160822e-16  1.2353209           3700   333.57944      12             10.666667      0.0029233853   0.0026768895   0.00089985422  0.00058009165  18722.037      3430.9655    
+Loop time of 3249.38 on 40 procs for 100000 steps with 3700 atoms
+
+Performance: 2.659 ns/day, 9.026 hours/ns, 30.775 timesteps/s, 113.868 katom-step/s
+98.2% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 235.94     | 273.73     | 325.36     | 129.6 |  8.42
+Bond    | 21.678     | 30.601     | 41.346     |  67.7 |  0.94
+Kspace  | 37.426     | 93.436     | 135.04     | 244.1 |  2.88
+Neigh   | 25.248     | 25.26      | 25.266     |   0.1 |  0.78
+Comm    | 21.369     | 21.714     | 22.092     |   4.5 |  0.67
+Output  | 0.0028534  | 0.0032458  | 0.0038423  |   0.4 |  0.00
+Modify  | 2800.9     | 2801.5     | 2802.1     |   0.7 | 86.22
+Other   |            | 3.109      |            |       |  0.10
+
+Nlocal:           92.5 ave         106 max          77 min
+Histogram: 1 1 2 6 8 9 4 3 4 2
+Nghost:        6989.18 ave        7038 max        6943 min
+Histogram: 4 3 5 0 9 4 5 4 4 2
+Neighs:        74139.8 ave       91804 max       56082 min
+Histogram: 1 1 1 8 10 9 5 2 2 1
+
+Total # of neighbors = 2965592
+Ave neighs/atom = 801.51135
+Ave special neighs/atom = 11.393514
+Neighbor list builds = 203115
+Dangerous builds = 0
+
+# Production run with averaging
+fix avg_out all ave/time 100 50 5000 v_n_ch4 v_n_co2 v_selectivity v_strain c_TempCO2 file adsorption_data.txt
+
+run 200000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.18147079
+  grid = 12 12 10
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0016953643
+  estimated relative force accuracy = 5.1055392e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 48
+Generated 250 of 253 mixed pair_coeff terms from sixthpower/arithmetic mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_ch4
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_co2
+WARNING: One or more atoms are time integrated more than once
+For more information see https://docs.lammps.org/err0032 (../modify.cpp:299)
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+Per MPI rank memory allocation (min/avg/max) = 27.42 | 27.51 | 28.21 Mbytes
+   Step          Temp          Press          Volume        v_strain       Density        Atoms      c_TempCO2       v_n_ch4        v_n_co2       v_iacc_ch4     v_dacc_ch4     v_iacc_co2     v_dacc_co2       PotEng         KinEng    
+    150000   312.9749      -2076.806       39571.334      5.5160822e-16  1.2353209           3700   333.5606       12             10.666667      0.0029233853   0.0026768895   0.00089985422  0.00058009165  18722.04       3430.9641    
+    160000   313.9189      -1366.828       39679.715      5.5010155e-16  1.2383186           3711   317.46472      14             12.666667      0.0029148092   0.0026493383   0.00091043007  0.00056280648  18728.624      3447.8627    
+    170000   313.83578     -1565.72        39850.169     -1.8258286e-16  1.236693            3718   341.02084      12             14.666667      0.0028398603   0.0026272862   0.00093401672  0.00056625047  18730.198      3449.7563    
+    180000   316.01861     -573.44378      39345.473     -3.6984979e-16  1.2532334           3719   245.80873      13             14.666667      0.0027271004   0.0025193522   0.00089251228  0.00055371752  18622.557      3474.6924    
+    190000   312.84552      1162.8534      39371.425      1.293621e-15   1.2476751           3711   390.64327      11             13.333333      0.0026613592   0.0024960384   0.00084402552  0.00055637109  18663.216      3434.8301    
+    200000   311.20387      665.24582      39332.37       3.6997301e-16  1.2536475           3720   280.28388      8              16             0.0026173431   0.0025028257   0.00086825152  0.00054566918  18586.9        3420.2073    
+    210000   313.4791      -880.30307      39618.14       0              1.2486352           3727   324.77842      9              17.333333      0.0026300266   0.0025077009   0.00085178769  0.00052389916  18604.242      3449.2618    
+    220000   309.03575     -836.2257       39717.875      3.6638202e-16  1.2475083           3731   315.0332       7              18.666667      0.0025799581   0.0024907449   0.0008369868   0.00050486016  18605.918      3401.5991    
+    230000   316.03166      356.89908      39695.243      9.1647728e-16  1.2535841           3740   347.64374      10             20             0.0026246398   0.0025087947   0.0008350396   0.00049897931  18592.677      3484.5703    
+    240000   316.55413     -555.92121      39890.049     -5.4720095e-16  1.2497974           3744   281.5075       11             20.666667      0.0025923362   0.0024709506   0.00082278394  0.00049369696  18631.335      3492.8473    
+    250000   313.74521      2671.676       39404.339      5.5394592e-16  1.2635146           3741   299.4375       11             20             0.0025642284   0.0024459617   0.00080173094  0.00049892183  18543.217      3460.295     
+    260000   310.72591     -1107.0354      39894.914      1.8237808e-16  1.2466423           3739   355.68926      9              20             0.00252749     0.0024345454   0.00079229394  0.00050360553  18733.847      3425.1428    
+    270000   315.9496       758.48178      39606.423      1.2859455e-15  1.2590786           3746   290.88191      4              22.666667      0.0024750876   0.002434038    0.00079279667  0.00048067287  18584.362      3484.2933    
+    280000   306.51436      3209.851       39952.57       5.4634465e-16  1.2505017           3750   310.16666      5              23.333333      0.0024806315   0.0024324538   0.00076690391  0.00045985748  18586.426      3382.6779    
+    290000   306.80582     -38.940151      39903.352      7.2935803e-16  1.2543786           3754   405.86563      6              24             0.0024425195   0.0023908279   0.00075192304  0.00044885131  18467.75       3388.3332    
+    300000   304.3805      -1121.0307      40140.187     -3.6252734e-16  1.2483013           3757   298.3953       3              25.333333      0.002401093    0.0023749151   0.00074553222  0.00043909687  18626.973      3361.8506    
+    310000   312.16836     -630.46803      40046.343      1.0901306e-15  1.2522226           3759   334.03888      2              26             0.0023930422   0.0023761901   0.00072452542  0.00042223213  18494.902      3448.4871    
+    320000   314.75785     -428.17433      39986.281     -1.0917681e-15  1.2577654           3765   347.79536      5              26.666667      0.0024072451   0.0023705266   0.00072025727  0.00042120478  18539.496      3481.4713    
+    330000   305.50166     -408.43468      40081.209      5.4459118e-16  1.2581058           3771   285.51662      5              28             0.0023727149   0.0023344453   0.00070933114  0.00040589011  18517.827      3382.1259    
+    340000   312.73727      309.22722      40339.218     -7.2147731e-16  1.2523683           3775   298.43592      6              28.666667      0.002338752    0.0022957427   0.00069159593  0.00039200287  18541.387      3464.7153    
+    350000   317.65688      797.80859      40166.171     -7.2458564e-16  1.2564376           3773   338.92807      4              28.666667      0.0022934541   0.0022665443   0.00068187698  0.00039225307  18510.662      3517.3243    
+Loop time of 6572.1 on 40 procs for 200000 steps with 3773 atoms
+
+Performance: 2.629 ns/day, 9.128 hours/ns, 30.432 timesteps/s, 114.819 katom-step/s
+98.2% CPU use with 40 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 483.17     | 557.63     | 636.45     | 170.2 |  8.48
+Bond    | 54.416     | 61.367     | 71.497     |  49.5 |  0.93
+Kspace  | 95.515     | 181.08     | 258.5      | 311.3 |  2.76
+Neigh   | 50.399     | 50.414     | 50.435     |   0.1 |  0.77
+Comm    | 43.355     | 43.954     | 44.64      |   5.4 |  0.67
+Output  | 0.0067101  | 0.0073985  | 0.0080577  |   0.4 |  0.00
+Modify  | 5670.2     | 5671.4     | 5672.5     |   1.1 | 86.30
+Other   |            | 6.247      |            |       |  0.10
+
+Nlocal:         94.325 ave         118 max          82 min
+Histogram: 4 7 10 3 5 9 1 0 0 1
+Nghost:         7045.1 ave        7090 max        6981 min
+Histogram: 2 1 2 5 7 1 6 8 3 5
+Neighs:        75952.8 ave      100201 max       59688 min
+Histogram: 5 2 5 5 11 7 2 2 0 1
+
+Total # of neighbors = 3038111
+Ave neighs/atom = 805.22422
+Ave special neighs/atom = 11.216008
+Neighbor list builds = 408944
+Dangerous builds = 0
+
+write_restart final.restart
+System init for write_restart ...
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.18125926
+  grid = 12 12 10
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0023318815
+  estimated relative force accuracy = 7.0223917e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 48
+Generated 250 of 253 mixed pair_coeff terms from sixthpower/arithmetic mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_ch4
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_co2
+WARNING: One or more atoms are time integrated more than once
+For more information see https://docs.lammps.org/err0032 (../modify.cpp:299)
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+write_data final_adsorbed_structure.data
+System init for write_data ...
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb
+  G vector (1/distance) = 0.18125926
+  grid = 12 12 10
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0023318815
+  estimated relative force accuracy = 7.0223917e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 720 48
+Generated 250 of 253 mixed pair_coeff terms from sixthpower/arithmetic mixing rule
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_ch4
+0 atoms in group FixGCMC:rotation_gas_atoms:gcmc_co2
+WARNING: One or more atoms are time integrated more than once
+For more information see https://docs.lammps.org/err0032 (../modify.cpp:299)
+WARNING: Neighbor exclusions used with KSpace solver may give inconsistent Coulombic energies (../neighbor.cpp:671)
+WARNING: Not all mixed pair coeffs generated from mixing. Use write_data with 'pair ij' option to store all pair coeffs. (../write_data.cpp:364)
+write_dump all xyz final_adsorbed_structure.xyz
+
+print "GCMC/MD simulation finished."
+GCMC/MD simulation finished.
+print "Final CH4 molecules: ${n_ch4}"
+Final CH4 molecules: 4
+print "Final CO2 molecules: ${n_co2}"
+Final CO2 molecules: 28.6666666666667
+print "Final CO2/CH4 Selectivity: ${selectivity}"
+Final CO2/CH4 Selectivity: 7.16487544780472
+print "Final Volumetric Strain: ${strain}"
+Final Volumetric Strain: -7.24585639072344e-16
+
+Total wall time: 2:47:26

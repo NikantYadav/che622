@@ -73,6 +73,9 @@ variable Pdamp equal 1000.0
 compute TempCO2 co2 temp
 compute_modify TempCO2 dynamic/dof yes
 
+# Minimize energy
+minimize 1.0e-4 1.0e-6 10000 100000
+
 # --- STAGE 1: INITIAL EQUILIBRATION ---
 fix nvt_coal coal nvt temp ${temp} ${temp} ${Tdamp}
 run 50000
@@ -93,10 +96,10 @@ fix_modify rigid_co2 dynamic/dof yes
 fix npt_coal coal npt temp ${temp} ${temp} ${Tdamp} aniso ${press} ${press} ${Pdamp}
 
 # GCMC for CH4 (no rigid constraint needed)
-fix gcmc_ch4 ch4 gcmc 1000 1000 0 0 54321 ${temp} 0.0 0.0 mol ch4_mol pressure ${press} fugacity_coeff ${phi_ch4} group ch4 tfac_insert 1.0 full_energy overlap_cutoff 1.5
+fix gcmc_ch4 ch4 gcmc 2000 500 0 0 54321 ${temp} 0.0 0.0 mol ch4_mol pressure ${press} fugacity_coeff ${phi_ch4} group ch4 tfac_insert 1.0 full_energy overlap_cutoff 2.5
 
 # GCMC for CO2 (with rigid constraint)
-fix gcmc_co2 co2 gcmc 1000 1000 0 0 12345 ${temp} 0.0 0.0 mol co2_mol pressure ${press} fugacity_coeff ${phi_co2} group co2 rigid rigid_co2 tfac_insert 2.0 full_energy overlap_cutoff 1.5
+fix gcmc_co2 co2 gcmc 2000 500 0 0 12345 ${temp} 0.0 0.0 mol co2_mol pressure ${press} fugacity_coeff ${phi_co2} group co2 rigid rigid_co2 tfac_insert 1.0 full_energy overlap_cutoff 2.5
 
 # Modify thermo compute for dynamic DOF
 compute_modify thermo_temp dynamic/dof yes
