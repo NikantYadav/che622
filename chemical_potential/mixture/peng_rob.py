@@ -135,7 +135,7 @@ if __name__ == "__main__":
     
     # Define the pressures to calculate
     # Using 21 points from 1 bar to 101 bar (steps of 5)
-    pressures = np.linspace(1, 101, 21)
+    pressures = np.linspace(1, 150, 21)
     
     T_TARGET = 313.15  # K
     KIJ_TARGET = 0.0919  # CH4-CO2 BIP

@@ -77,7 +77,7 @@ if __name__ == "__main__":
     T = 313.15
     kij = 0.0919
 
-    pressures = np.arange(0.5, 100.5, 0.5)  # 0.5 → 100 bar, step = 0.5
+    pressures = np.arange(0.5, 150.5, 0.5)  # 0.5 → 150 bar, step = 0.5
     BAR_TO_ATM = 0.986923
 
     with open("fugacity_table.csv", "w", newline="") as file:
